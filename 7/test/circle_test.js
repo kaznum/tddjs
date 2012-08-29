@@ -26,5 +26,17 @@ TestCase("CircleTest", {
     },
     "test calling prototype without 'new' returns undefined": function () {
 	assertException(function() { Circle(6);}, "Error")
+    },
+
+    "test spheres are circles in 3D": function () {
+	var radius = 3;
+	var sphere = new Sphere(radius);
+
+	assertTrue(sphere instanceof Sphere);
+	assertTrue(sphere instanceof Circle);
+	assertTrue(sphere instanceof Object);
+	assertEquals(6, sphere.diameter());
+	assertEquals(36 * Math.PI,sphere.area());
+	assertEquals(4 / 3 * 27 * Math.PI,sphere.volume());
     }
 });
