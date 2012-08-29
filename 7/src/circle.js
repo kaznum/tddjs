@@ -21,7 +21,7 @@ function Circle(radius) {
 
 
 function Sphere(radius) {
-  this.radius = radius;
+  Circle.call(this, radius);
 }
 
 Sphere.inherit(Circle);
