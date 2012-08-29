@@ -33,7 +33,7 @@ Sphere.inherit(Circle);
 // Circleのprototype.[[Prototype]] == Object.prototype
 (function(p) {
   p.area = function () {
-    return 4 * Circle.prototype.area.call(this);
+    return 4 * this._super.area.call(this);
   }
 
   p.volume = function () {
