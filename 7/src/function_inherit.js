@@ -40,3 +40,14 @@ if (!Function.prototype.inherit2) {
     };
   }());
 }
+
+function _super(object, methodName) {
+  var method = object._super && object._super[methodName];
+
+  if (typeof method != "function") {
+    return;
+  }
+
+  var args = Array.prototype.slice.call(arguments, 2);
+  return method.apply(object, args);
+}
