@@ -38,5 +38,22 @@ TestCase("CircleTest", {
     assertEquals(6, sphere.diameter());
     assertEquals(36 * Math.PI,sphere.area());
     assertEquals(4 / 3 * 27 * Math.PI,sphere.volume());
+  },
+
+  "test should create circle object with function": function () {
+    var circ = circle(6);
+    assertEquals(6, circ.radius());
+
+    circ.radius(12);
+    assertEquals(12, circ.radius());
+    assertEquals(24, circ.diameter());
+  },
+  "test should create sphere object with function": function () {
+    var sp = sphere(6);
+    assertEquals(6, sp.radius());
+
+    sp.radius(12);
+    assertEquals(12, sp.radius());
+    assertEquals(4 * Math.PI * 144, sp.area());
   }
 });

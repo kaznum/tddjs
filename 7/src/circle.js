@@ -41,3 +41,45 @@ Sphere.inherit(Circle);
   }
 }(Sphere.prototype));
 
+function circle(radius) {
+  function getSetRadius() {
+    if (arguments.length > 0) {
+      if (arguments[0] < 0) {
+	throw new TypeError("Radius should be >= 0");
+      }
+      radius = arguments[0];
+    }
+    return radius;
+  }
+
+  function diameter() {
+    return radius * 2;
+  }
+
+  function area () {
+    return radius * radius * Math.PI;
+  }
+  function circumference() {
+    return diameter() * Math.PI;
+  }
+
+  return {
+    radius: getSetRadius,
+    area: area,
+    diameter: diameter,
+    circumference: circumference
+  }
+}
+
+function sphere(radius) {
+  var sphereObj = circle(radius);
+  var circleArea = sphereObj.area;
+
+  function area() {
+    return 4 * circleArea.call(this);
+  }
+
+  sphereObj.area = area
+
+  return sphereObj;
+}
