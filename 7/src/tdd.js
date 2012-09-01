@@ -141,6 +141,9 @@ tddjs.each = (function () {
 tddjs.extend = (function () {
   function extend(target, source)  {
     target = target || {};
+    if (!source) {
+      return target;
+    }
     tddjs.each(source, function (prop, val) {
       target[prop] = val;
     });

@@ -21,6 +21,15 @@ TestCase("ObjectExtentTest", {
 
     assertEquals("function", typeof object.setName);
     assertEquals("function", typeof object.getName);
-  }
+  },
+  "test should return target untatched when no source": function () {
+    var object = tddjs.extend({});
+    var properties = [];
 
+    for (var prop in object) {
+      properties.push(prop);
+    }
+
+    assertEquals(0, properties.length);
+  }
 });
