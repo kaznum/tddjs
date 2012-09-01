@@ -2,10 +2,10 @@ TestCase("ObjectExtentTest", {
   setUp: function () {
     this.dummy = {
       setName: function (name) {
-	return (this.name = name);
+        return (this.name = name);
       },
       getName: function () {
-	return this.name || null;
+        return this.name || null;
       }
     };
   },
