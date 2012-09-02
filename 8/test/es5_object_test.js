@@ -53,5 +53,30 @@ TestCase("ES5ObjectTest", {
     assertEquals(3, sphere.radius);
     assert(circle.isPrototypeOf(sphere));
     assertEquals(circle, Object.getPrototypeOf(sphere));
+  },
+  "test property accessor": function () {
+    var circle = {}
+    Object.defineProperty(circle, "diameter", {
+      get: function () {
+	return this.radius * 2;
+      },
+      set: function(diameter) {
+	if (isNaN(diameter)) {
+	  throw new TypeError("Diameter should be a number.");
+	}
+	this.radius = diameter / 2;
+      }
+    });
+
+    circle.radius = 4;
+    assertEquals(8, circle.diameter);
+
+    circle.diameter = 3;
+    assertEquals(3, circle.diameter);
+    assertEquals(1.5, circle.radius);
+
+    assertException(function () {
+      circle.diameter = {};
+    });
   }
 });
