@@ -14,5 +14,32 @@ TestCase("CircleTest", {
     var circle = Circle(3);
     assert(circle instanceof Circle);
     assertEquals(6, circle.diameter);
+  },
+  "test using a custom create method": function () {
+    var circle = Object.create({}, {
+      diameter: {
+	get: function () {
+	  return this.radius * 2;
+	}
+      },
+
+      create: {
+	value: function (radius) {
+	  var circ = Object.create(this, {
+	    radius: { value: radius }
+	  });
+	  return circ;
+	}
+      }
+    });
+
+    var myCircle = circle.create(3);
+    console.log(myCircle);
+    assertEquals(6, myCircle.diameter);
+    assert(circle.isPrototypeOf(myCircle));
+
+    assertException(function() {
+      assertFalse(myCircle instanceof circle);
+    });
   }
 });
