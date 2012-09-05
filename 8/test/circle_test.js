@@ -18,18 +18,18 @@ TestCase("CircleTest", {
   "test using a custom create method": function () {
     var circle = Object.create({}, {
       diameter: {
-	get: function () {
-	  return this.radius * 2;
-	}
+        get: function () {
+          return this.radius * 2;
+        }
       },
 
       create: {
-	value: function (radius) {
-	  var circ = Object.create(this, {
-	    radius: { value: radius }
-	  });
-	  return circ;
-	}
+        value: function (radius) {
+          var circ = Object.create(this, {
+            radius: { value: radius }
+          });
+          return circ;
+        }
       }
     });
 
@@ -43,3 +43,4 @@ TestCase("CircleTest", {
     });
   }
 });
+
