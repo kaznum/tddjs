@@ -9,6 +9,7 @@
     dom.addClassName(element, "js-tab-controller");
     var tabs = Object.create(this);
 
+    // this callback definition is not tested
     element.onclick = function (event) {
       tabs.handleTabClick(event || window.event || {});
     };
