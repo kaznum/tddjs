@@ -8,7 +8,15 @@ TestCase("ObservableAddObserverTest", {
 
     assertTrue(observable.hasObserver(observers[0]));
     assertTrue(observable.hasObserver(observers[1]));
-  }
+  },
+
+  "test should throw for uncallable observer": function () {
+    var observable = new tddjs.util.Observable();
+
+    assertException(function () {
+      observable.addObserver({});
+    }, "TypeError");
+  },
 });
 
 TestCase("ObservableHasObserverTest", {
@@ -44,5 +52,38 @@ TestCase("ObservableNotifyObserversTest", {
     observable.notifyObservers("String", 1, 32);
 
     assertEquals(["String", 1, 32], actual);
+  },
+
+  "test should notfiy all even when some fail": function () {
+    var observable = new tddjs.util.Observable();
+    var observer1 = function () { throw new Error("Oops") };
+    var observer2 = function () { observer2.called = true };
+
+    observable.addObserver(observer1);
+    observable.addObserver(observer2);
+    observable.notifyObservers();
+    assertTrue(observer2.called);
+  },
+
+  "test should call observers in the order they were added": function () {
+    var calls = [];
+    var observable = new tddjs.util.Observable();
+    var observer1 = function () { calls.push(observer1); };
+    var observer2 = function () { calls.push(observer2); };
+    observable.addObserver(observer1);
+    observable.addObserver(observer2);
+
+    observable.notifyObservers();
+
+    assertEquals(observer1, calls[0]);
+    assertEquals(observer2, calls[1]);
+  },
+
+  "test should not fail if no observers" : function () {
+    var observable = new tddjs.util.Observable();
+
+    assertNoException(function () {
+      observable.notifyObservers();
+    });
   }
 });
