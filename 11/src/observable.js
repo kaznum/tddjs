@@ -1,10 +1,6 @@
 tddjs.namespace("util");
 (function () {
-  function Observable() {
-  }
-  tddjs.util.Observable = Observable;
-
-  function addObserver(observer) {
+  function observe(observer) {
     if (!this.observers) {
       this.observers = [];
     }
@@ -13,8 +9,6 @@ tddjs.namespace("util");
     }
     this.observers.push(observer);
   }
-
-  Observable.prototype.addObserver = addObserver;
 
   function hasObserver(observer) {
     if (!this.observers) {
@@ -27,9 +21,8 @@ tddjs.namespace("util");
     }
     return false;
   }
-  Observable.prototype.hasObserver = hasObserver;
 
-  function notifyObservers() {
+  function notify() {
     if (!this.observers) {
       return;
     }
@@ -39,6 +32,10 @@ tddjs.namespace("util");
       } catch (e) {}
     }
   }
-  Observable.prototype.notifyObservers = notifyObservers;
 
+  tddjs.namespace("util").observable = {
+    observe: observe,
+    hasObserver: hasObserver,
+    notify: notify
+  };
 }());
