@@ -25,3 +25,6 @@
     } catch (e) {}
   }
 }());
+(function () {
+  tddjs.namespace("ajax").get = function () {};
+}());
