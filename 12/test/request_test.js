@@ -4,6 +4,8 @@
   TestCase("GetRequestTest", {
     setUp: function () {
       this.ajaxCreate = ajax.create;
+      this.xhr = Object.create(fakeXMLHttpRequest);
+      ajax.create = stubFn(this.xhr);
     },
     tearDown: function () {
       ajax.create = this.ajaxCreate;
@@ -20,25 +22,16 @@
     },
 
     "test should obtain an XMLHttpRequest object": function () {
-      ajax.create = stubFn();
       ajax.get("/url");
 
       assert(ajax.create.called);
     },
 
     "test should call open with method, url, async flag": function () {
-      var actual;
-
-      ajax.create = stubFn({
-        open: function () {
-          actural = arguments;
-        }
-      });
-
       var url = "/url";
       ajax.get(url);
 
-      assertEquals(["GET", url, true], actual);
+      assertEquals(["GET", url, true], this.xhr.open.args);
     }
   });
 }());
