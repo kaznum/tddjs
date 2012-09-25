@@ -27,7 +27,7 @@
         requestComplete(transport, options);
       }
     };
-    transport.send();
+    transport.send(null);
   };
 
   ajax.get = get;
