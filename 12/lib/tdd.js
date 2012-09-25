@@ -145,7 +145,7 @@ tddjs.isHostMethod = (function () {
 tddjs.isLocal = (function () {
   function isLocal() {
     return !!(window.location &&
-           window.location.protocol.indexOf("file:") === 0);
+              window.location.protocol.indexOf("file:") === 0);
   }
 
   return isLocal;

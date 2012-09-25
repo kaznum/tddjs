@@ -4,7 +4,9 @@ tddjs.noop = function () {};
   var ajax = tddjs.namespace("ajax");
 
   function requestComplete(transport, options) {
-    if (transport.status == 200) {
+    var status = transport.status;
+
+    if (status == 200 || (tddjs.isLocal() && !status)) {
       if (typeof options.success == "function") {
         options.success(transport);
       }
