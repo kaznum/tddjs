@@ -64,15 +64,9 @@
     },
 
     "test should call success handler for status 200": function () {
-      this.xhr.readyState = 4;
-      this.xhr.status = 200;
-      var success = stubFn();
+      var request = forceStatusAndReadyState(this.xhr, 200, 4);
 
-      ajax.get("/url", { success: success });
-
-      this.xhr.onreadystatechange();
-
-      assert(success.called);
+      assert(request.success);
     },
 
     "test should not throw error without success handler" : function () {
