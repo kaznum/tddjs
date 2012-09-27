@@ -100,7 +100,16 @@
       this.xhr.onreadystatechange();
 
       assert(success.called);
-    }
+    },
+    "test should call success handler for status 304": function () {
+      var request = forceStatusAndReadyState(this.xhr, 304, 4);
 
+      assert(request.success);
+    },
+    "test should call success handler for status 200 - 299": function () {
+      var request = forceStatusAndReadyState(this.xhr, 205, 4);
+
+      assert(request.success);
+    }
   });
 }());

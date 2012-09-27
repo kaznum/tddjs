@@ -3,10 +3,14 @@ tddjs.noop = function () {};
 (function () {
   var ajax = tddjs.namespace("ajax");
 
-  function requestComplete(transport, options) {
+  function isSuccess(transport) {
     var status = transport.status;
 
-    if (status == 200 || (tddjs.isLocal() && !status)) {
+    return (200 <= status && status < 300 || status == 304 || (tddjs.isLocal() && !status));
+  }
+
+  function requestComplete(transport, options) {
+    if (isSuccess(transport)) {
       if (typeof options.success == "function") {
         options.success(transport);
       }
