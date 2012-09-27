@@ -14,6 +14,10 @@ tddjs.noop = function () {};
       if (typeof options.success == "function") {
         options.success(transport);
       }
+    } else {
+      if (typeof options.failure == "function") {
+        options.failure(transport);
+      }
     }
   }
 

@@ -110,6 +110,11 @@
       var request = forceStatusAndReadyState(this.xhr, 205, 4);
 
       assert(request.success);
+    },
+    "test should call failure handler for status which is not within 200 - 299, 304": function () {
+      var request = forceStatusAndReadyState(this.xhr, 404, 4);
+
+      assert(request.failure);
     }
   });
 }());
