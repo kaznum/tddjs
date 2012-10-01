@@ -136,6 +136,14 @@
       ajax.request("/url", { data: object, method: "POST" });
 
       assertSame(object, tddjs.util.urlParams.args[0]);
+    },
+
+    "test should send data with send() for POST": function () {
+      var object = { field1: "$13", field2: "Lots of data!" };
+      var expected = tddjs.util.urlParams(object);
+      ajax.request("/url", { data: object, method: "POST" });
+
+      assertEquals(expected, this.xhr.send.args[0]);
     }
   });
 
