@@ -25,17 +25,21 @@ tddjs.noop = function () {};
     return;
   }
 
+  function setData(options) {
+    if (options.method == "POST") {
+      options.data = tddjs.util.urlParams(options.data);
+    } else {
+      options.data =null;
+    }
+  }
+
   function request(url, options) {
     if (typeof url != "string") {
       throw new TypeError("URL should be string");
     }
 
     options = tddjs.extend({}, options);
-    options.data = tddjs.util.urlParams(options.data);
-    var data = null;
-    if (options.method == "POST") {
-      data = options.data;
-    }
+    setData(options);
 
     var transport = tddjs.ajax.create();
 
@@ -46,7 +50,7 @@ tddjs.noop = function () {};
         transport.onreadystatechange = tddjs.noop;
       }
     };
-    transport.send(data);
+    transport.send(options.data);
   }
 
   ajax.request = request;
