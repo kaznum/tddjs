@@ -2,6 +2,7 @@
   var ajax = tddjs.ajax;
 
   function setUp() {
+    this.tddjsUrlParams = tddjs.util.urlParams;
     this.tddjsIsLocal = tddjs.isLocal;
     this.ajaxCreate = ajax.create;
     this.xhr = Object.create(fakeXMLHttpRequest);
@@ -9,6 +10,7 @@
   }
 
   function tearDown() {
+    tddjs.util.urlParams = this.tddjsUrlParams;
     tddjs.isLocal = this.tddjsIsLocal;
     ajax.create = this.ajaxCreate;
   }
@@ -125,6 +127,15 @@
     "test should use specified request method" : function () {
       ajax.request("/url", { method: "POST" });
       assertEquals("POST", this.xhr.open.args[0]);
+    },
+
+    "test should encode data" : function () {
+      tddjs.util.urlParams = stubFn();
+      var object = { field1: "13", field2: "Lots of data!" };
+
+      ajax.request("/url", { data: object, method: "POST" });
+
+      assertSame(object, tddjs.util.urlParams.args[0]);
     }
   });
 

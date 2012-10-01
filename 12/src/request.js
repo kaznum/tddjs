@@ -30,7 +30,9 @@ tddjs.noop = function () {};
       throw new TypeError("URL should be string");
     }
 
-    options = options || {};
+    options = tddjs.extend({}, options);
+    options.data = tddjs.util.urlParams(options.data);
+
     var transport = tddjs.ajax.create();
 
     transport.open(options.method || "GET", url, true);
