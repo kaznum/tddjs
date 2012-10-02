@@ -43,6 +43,26 @@ tddjs.noop = function () {};
     }
   }
 
+  function setDefaultHeader(transport, userHeaders, header, val) {
+    if (!userHeaders[header]) {
+        transport.setRequestHeader(header, val);
+    }
+  }
+
+  function setHeaders(options) {
+    var transport = options.transport;
+    var headers = options.headers || {};
+    tddjs.each(headers, function (header, value) {
+      transport.setRequestHeader(header, value);
+    });
+
+    if (options.method == "POST" && options.data) {
+      setDefaultHeader(transport, headers, "Content-Type", "application/x-www-form-urlencoded");
+      setDefaultHeader(transport, headers, "Content-Length", options.data.length);
+    }
+    setDefaultHeader(transport, headers, "X-Requested-With", "XMLHttpRequest");
+  }
+
   function request(url, options) {
     if (typeof url != "string") {
       throw new TypeError("URL should be string");
@@ -53,8 +73,12 @@ tddjs.noop = function () {};
     setData(options);
 
     var transport = tddjs.ajax.create();
+    options.transport = transport;
 
     transport.open(options.method || "GET", options.url, true);
+
+    setHeaders(options);
+
     transport.onreadystatechange = function () {
       if (transport.readyState == 4) {
         requestComplete(transport, options);

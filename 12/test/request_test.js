@@ -183,4 +183,110 @@
       assertEquals("POST", ajax.request.args[1].method);
     }
   });
+
+  TestCase("RequestHeadersTest", {
+    setUp: function () {
+      setUp.call(this);
+      this.options = {
+        method: "POST",
+        data: {
+          field: "value"
+        }
+      };
+    },
+
+    tearDown: tearDown,
+
+    "test should use default Content-Type header for POST" : function () {
+      ajax.request("/url", this.options);
+      var name = "Content-Type";
+      var type = "application/x-www-form-urlencoded";
+
+      assertEquals(type, this.xhr.headers[name]);
+    },
+
+    "test should use default Content-Length header for POST" : function () {
+      ajax.request("/url", this.options);
+      var name = "Content-Length";
+      var length = 11;
+
+      assertEquals(length, this.xhr.headers[name]);
+    },
+
+    "test should set X-Requested-With" : function () {
+      ajax.request("/url", this.options);
+      var name = "X-Requested-With";
+      var value = "XMLHttpRequest";
+
+      assertEquals(value, this.xhr.headers[name]);
+    },
+
+    "test should not override provided Content-Type": function () {
+      ajax.request("/url", {
+        method: "POST",
+        data: {
+          field: "value"
+        },
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      var name = "Content-Type";
+      var value = "application/json";
+
+      assertEquals(value, this.xhr.headers[name]);
+    },
+
+    "test should not override provided Content-Length": function () {
+      ajax.request("/url", {
+        method: "POST",
+        data: {
+          field: "value"
+        },
+        headers: {
+          "Content-Length": 47
+        }
+      });
+
+      var name = "Content-Length";
+      var value = 47;
+
+      assertEquals(value, this.xhr.headers[name]);
+    },
+
+    "test should not override provided X-Requested-With": function () {
+      ajax.request("/url", {
+        method: "POST",
+        data: {
+          field: "value"
+        },
+        headers: {
+          "X-Requested-With": "JavaScript"
+        }
+      });
+
+      var name = "X-Requested-With";
+      var value = "JavaScript"
+
+      assertEquals(value, this.xhr.headers[name]);
+    },
+
+    "test should set arbitrary headers": function () {
+      ajax.request("/url", {
+        method: "POST",
+        data: {
+          field: "value"
+        },
+        headers: {
+          "Accept": "*/*"
+        }
+      });
+
+      var name = "Accept";
+      var value = "*/*";
+
+      assertEquals(value, this.xhr.headers[name]);
+    }
+  });
 }());
