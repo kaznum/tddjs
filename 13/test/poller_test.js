@@ -35,8 +35,11 @@
 
       poller.start();
 
+      var expectedArgs = ["GET", poller.url, true];
+      var actualArgs = [].slice.call(this.xhr.open.args);
       assert(this.xhr.open.called);
-      assertEquals(poller.url, this.xhr.open.args[1]);
+      assertEquals(expectedArgs, actualArgs);
+      assert(this.xhr.send.called);
     }
   });
 }());
