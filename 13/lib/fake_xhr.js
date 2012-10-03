@@ -20,10 +20,12 @@ function forceStatusAndReadyState(xhr, status, rs) {
   var ajax = tddjs.namespace("ajax");
   var success = stubFn();
   var failure = stubFn();
+  var complete = stubFn();
 
   ajax.get("/url", {
     success: success,
-    failure: failure
+    failure: failure,
+    complete: complete
   });
 
   xhr.status = status;
@@ -31,6 +33,7 @@ function forceStatusAndReadyState(xhr, status, rs) {
 
   return {
     success: success.called,
-    failure: failure.called
+    failure: failure.called,
+    complete: complete.called
   };
 }

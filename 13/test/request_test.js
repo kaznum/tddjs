@@ -163,6 +163,19 @@
       ajax.request(url, {data: object, method: "GET"});
 
       assertEquals(expected, this.xhr.open.args[1]);
+    },
+
+    "test should call complete handler for status 200": function () {
+      var request = forceStatusAndReadyState(this.xhr, 200, 4);
+      assert(request.complete);
+    },
+    "test should call complete handler for status 400": function () {
+      var request = forceStatusAndReadyState(this.xhr, 400, 4);
+      assert(request.complete);
+    },
+    "test should call complete handler for status 0": function () {
+      var request = forceStatusAndReadyState(this.xhr, 0, 4);
+      assert(request.complete);
     }
   });
 
