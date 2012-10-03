@@ -1,5 +1,12 @@
 (function() {
   var ajax = tddjs.namespace("ajax");
 
-  ajax.poller = {};
+  function start() {
+    if (!this.url) {
+      throw new TypeError("Must specify URL to poll");
+    }
+  }
+  ajax.poller = {
+    start: start
+  };
 }());
