@@ -40,6 +40,18 @@
       assert(this.xhr.open.called);
       assertEquals(expectedArgs, actualArgs);
       assert(this.xhr.send.called);
+    },
+
+    "test should schedule new request when complete": function () {
+      var poller = Object.create(ajax.poller);
+      poller.url = "/url";
+
+      poller.start();
+      this.xhr.complete();
+      this.xhr.send = stubFn();
+      Clock.tick(1000);
+
+      assert(this.xhr.send.called);
     }
   });
 }());

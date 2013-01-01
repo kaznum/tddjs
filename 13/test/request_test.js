@@ -301,5 +301,6 @@
 
       assertEquals(value, this.xhr.headers[name]);
     }
+
   });
 }());
