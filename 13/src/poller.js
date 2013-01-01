@@ -20,7 +20,8 @@
         }, interval);
       },
       headers: poller.headers,
-      success: poller.success
+      success: poller.success,
+      failure: poller.failure
     });
   }
   ajax.poller = {
