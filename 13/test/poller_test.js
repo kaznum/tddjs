@@ -6,6 +6,8 @@
       this.ajaxCreate = ajax.create;
       this.xhr = Object.create(fakeXMLHttpRequest);
       ajax.create = stubFn(this.xhr);
+      this.poller = Object.create(ajax.poller);
+      this.poller.url = "/url";
     },
 
     tearDown: function () {
@@ -29,10 +31,7 @@
     },
 
     "test start should make XHR request with URL" : function () {
-      var poller = Object.create(ajax.poller);
-
-      poller.url = "/url";
-
+      var poller = this.poller;
       poller.start();
 
       var expectedArgs = ["GET", poller.url, true];
@@ -43,8 +42,7 @@
     },
 
     "test should schedule new request when complete": function () {
-      var poller = Object.create(ajax.poller);
-      poller.url = "/url";
+      var poller = this.poller;
 
       poller.start();
       this.xhr.complete();
