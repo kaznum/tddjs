@@ -5,7 +5,10 @@
     poller.url = url;
     options = options || {};
     poller.headers = options.headers;
-    
+    poller.success = options.success;
+    poller.failure = options.failure;
+    poller.complete = options.complete;
+    poller.interval = options.interval;
     poller.start();
 
     return poller;

@@ -40,5 +40,32 @@
       assertEquals(expected["Header-One"], actual["Header-One"]);
       assertEquals(expected["Header-Two"], actual["Header-Two"]);
     },
+
+    "test should pass success callback" : function () {
+      var func = "sample";
+      var poller = ajax.poll("/url", { success: func } );
+      assert(ajax.request.called);
+      assertSame(func, ajax.request.args[1].success);
+    },
+    "test should pass failure callback" : function () {
+      var func = "sample";
+
+      var poller = ajax.poll("/url", { failure: func } );
+      assert(ajax.request.called);
+      assertSame(func, ajax.request.args[1].failure);
+    },
+    "test should pass complete callback" : function () {
+      var func = "sample"
+
+      var poller = ajax.poll("/url", { complete: func } );
+      assert(ajax.request.called);
+      assertSame(func, poller.complete);
+    },
+    "test should pass interval" : function () {
+      var interval = 500;
+
+      var poller = ajax.poll("/url", { interval: interval } );
+      assertSame(interval, poller.interval);
+    },
   });
 }());
