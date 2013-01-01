@@ -72,6 +72,20 @@
 
       Clock.tick(1);
       assert(this.xhr.send.called);
+    },
+
+    "test should pass headers to request": function () {
+      this.poller.headers = {
+        "Header-One": "1",
+        "Header-Two": "2"
+      };
+
+      this.poller.start();
+
+      var actual = this.xhr.headers;
+      var expected = this.poller.headers;
+      assertEquals(expected["Header-One"], actual["Header-One"]);
+      assertEquals(expected["Header-Two"], actual["Header-Two"]);
     }
   });
 }());

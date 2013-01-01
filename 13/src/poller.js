@@ -18,7 +18,8 @@
         setTimeout(function () {
           poller.start();
         }, interval);
-      }
+      },
+      headers: poller.headers
     });
   }
   ajax.poller = {
