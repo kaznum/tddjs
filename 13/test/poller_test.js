@@ -12,6 +12,7 @@
 
     tearDown: function () {
       ajax.create = this.ajaxCreate;
+      Clock.reset();
     },
 
     "test should be object" : function () {
@@ -59,6 +60,18 @@
       Clock.tick(999);
 
       assertFalse(this.xhr.send.called);
+    },
+
+    "test should configure request interval": function () {
+      this.poller.interval = 350;
+      this.poller.start();
+      this.xhr.complete();
+      this.xhr.send = stubFn();
+      Clock.tick(349);
+      assertFalse(this.xhr.send.called);
+
+      Clock.tick(1);
+      assert(this.xhr.send.called);
     }
   });
 }());
