@@ -13,11 +13,16 @@
       interval = this.interval;
     }
 
+    var requestStart = new Date().getTime();
+
     ajax.request(this.url, {
       complete: function () {
+        var elapsed = new Date().getTime() - requestStart;
+        var remaining = interval - elapsed;
+
         setTimeout(function () {
           poller.start();
-        }, interval);
+        }, Math.max(0, remaining));
 
         if (typeof poller.complete == "function") {
           poller.complete();

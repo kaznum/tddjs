@@ -6,11 +6,13 @@
       this.ajaxCreate = ajax.create;
       this.xhr = Object.create(fakeXMLHttpRequest);
       ajax.create = stubFn(this.xhr);
+      this.ajaxRequest = ajax.request;
       this.poller = Object.create(ajax.poller);
       this.poller.url = "/url";
     },
 
     tearDown: function () {
+      ajax.request = this.ajaxRequest;
       ajax.create = this.ajaxCreate;
       Clock.reset();
     },
@@ -111,6 +113,19 @@
       this.poller.start();
       this.xhr.complete();
       assert(this.poller.complete.called);
+    },
+
+    "test should re-request immediately after long request": function () {
+      this.poller.interval = 500;
+      this.poller.start();
+      var ahead = new Date().getTime() + 600;
+      stubDateConstructor(new Date(ahead));
+      ajax.request = stubFn();
+
+      this.xhr.complete();
+      Clock.tick(0);
+
+      assert(ajax.request.called);
     }
   });
 }());
