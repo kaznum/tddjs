@@ -1,5 +1,12 @@
 (function() {
+  if (typeof tddjs == "undefined") {
+    return;
+  }
   var ajax = tddjs.namespace("ajax");
+
+  if (!ajax.request || !Object.create) {
+    return;
+  }
 
   function start() {
     if (!this.url) {
