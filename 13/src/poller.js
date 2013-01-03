@@ -15,7 +15,7 @@
 
     var requestStart = new Date().getTime();
 
-    ajax.request(this.url, {
+    ajax.request(this.url + "?" + requestStart, {
       complete: function () {
         var elapsed = new Date().getTime() - requestStart;
         var remaining = interval - elapsed;

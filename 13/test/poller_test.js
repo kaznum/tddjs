@@ -35,9 +35,11 @@
 
     "test start should make XHR request with URL" : function () {
       var poller = this.poller;
+      var time = new Date().getTime();
+      stubDateConstructor(new Date(time));
       poller.start();
-
-      var expectedArgs = ["GET", poller.url, true];
+      
+      var expectedArgs = ["GET", poller.url + "?" + time, true];
       var actualArgs = [].slice.call(this.xhr.open.args);
       assert(this.xhr.open.called);
       assertEquals(expectedArgs, actualArgs);
@@ -126,6 +128,17 @@
       Clock.tick(0);
 
       assert(ajax.request.called);
+    },
+
+    "test should add cache buster to URL" : function () {
+      var date = new Date();
+      var ts = date.getTime();
+      stubDateConstructor(date);
+      this.poller.url = "/url";
+
+      this.poller.start();
+
+      assertEquals("/url?" + ts, this.xhr.open.args[1]);
     }
   });
 }());
