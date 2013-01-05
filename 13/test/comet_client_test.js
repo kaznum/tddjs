@@ -4,25 +4,58 @@
   TestCase("CometClientTest", {
     "test should be object" : function () {
       assertObject(ajax.cometClient);
+    }
+  });
+
+  TestCase("CometClientDispatchTest", {
+    setUp: function () {
+      this.client = Object.create(ajax.cometClient);
+      this.client.observers = { notify: stubFn() };
     },
 
     "test should have dispatch method" : function () {
-      var client = Object.create(ajax.cometClient);
-
-      assertFunction(client.dispatch);
+      assertFunction(this.client.dispatch);
     },
 
     "test dispatch should notify observers": function () {
-      var client = Object.create(ajax.cometClient);
-      client.observers = { notify: stubFn() };
-      client.dispatch({ someEvent: [{id : 1234}]});
+      this.client.observers = { notify: stubFn() };
+      this.client.dispatch({ someEvent: [{id : 1234}]});
 
-      var args = client.observers.notify.args;
+      var args = this.client.observers.notify.args;
 
-      assert(client.observers.notify.called);
+      assert(this.client.observers.notify.called);
       assertEquals("someEvent", args[0]);
       assertEquals({id: 1234}, args[1]);
+    },
+
+    "test should not throw if no observers": function () {
+      this.client.observers = null;
+
+      assertNoException(function () {
+        this.client.dispatch({ someEvent: [{}]});
+      }.bind(this));
+    },
+
+    "test should not throw if notify undefined": function () {
+      this.client.observers = {};
+
+      assertNoException(function () {
+        this.client.dispatch({ someEvent: [{}]});
+      }.bind(this));
+    },
+
+    "test should not throw if data is not provided": function () {
+      assertNoException(function () {
+        this.client.dispatch();
+      }.bind(this));
+    },
+
+    "test should not throw if event is null" : function () {
+      assertNoException(function () {
+        this.client.dispatch({myEvent: null});
+      }.bind(this));
     }
+    
   });
 }());
 
