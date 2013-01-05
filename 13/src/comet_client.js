@@ -1,5 +1,6 @@
 (function () {
-  var ajax = tddjs.namespace("ajax");
+  var ajax = tddjs.ajax;
+  var util = tddjs.util;
   ajax.cometClient = {};
 
   function dispatch(data) {
@@ -16,7 +17,15 @@
     });
   }
 
+  function observe(topic, observer) {
+    if (!this.observers) {
+      this.observers = Object.create(util.observable);
+    }
+    this.observers.observe(topic, observer);
+  }
+
   ajax.cometClient = {
-    dispatch: dispatch
+    dispatch: dispatch,
+    observe: observe
   };
 }());

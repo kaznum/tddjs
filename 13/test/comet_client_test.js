@@ -55,7 +55,26 @@
         this.client.dispatch({myEvent: null});
       }.bind(this));
     }
-    
+  });
+
+  TestCase("CometClientObserveTest", {
+    setUp: function () {
+      this.client = Object.create(ajax.cometClient);
+    },
+
+    "test should remember observers": function () {
+      var observers = [stubFn(), stubFn()];
+      this.client.observe("myEvent", observers[0]);
+      this.client.observe("myEvent", observers[1]);
+      var data = { myEvent: [{}] };
+
+      this.client.dispatch(data);
+
+      assert(observers[0].called);
+      assertSame(data.myEvent[0], observers[0].args[0]);
+      assert(observers[1].called);
+      assertSame(data.myEvent[0], observers[1].args[0]);
+    }
   });
 }());
 
