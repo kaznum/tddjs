@@ -90,6 +90,7 @@
     tearDown: function () {
       ajax.poll = this.ajaxPoll;
       ajax.create = this.ajaxCreate;
+      Clock.reset();
     },
 
     "test connect should start polling": function () {
@@ -134,6 +135,17 @@
     "test should provide custom header" : function () {
       this.client.connect();
       assertNotUndefined(this.xhr.headers["X-Access-Token"]);
+    },
+
+    "test should pass token on following request": function () {
+      this.client.connect();
+      var data = { token: 1267482145219 };
+
+      this.xhr.complete(200, JSON.stringify(data));
+      Clock.tick(1000);
+
+      var headers = this.xhr.headers;
+      assertEquals(data.token, headers["X-Access-Token"]);
     }
   });
 }());

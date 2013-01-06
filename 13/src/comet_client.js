@@ -28,17 +28,23 @@
     if (!this.url) {
       throw new TypeError("Provide client URL");
     }
+
+    var headers = {
+      "Content-Type": "application/json",
+      "X-Access-Token": ""
+    };
     
     if (!this.poller) {
       this.poller = ajax.poll(this.url, {
         success: function (xhr) {
-          this.dispatch(JSON.parse(xhr.responseText));
+          try {
+            var data = JSON.parse(xhr.responseText);
+            headers["X-Access-Token"] = data.token;
+            this.dispatch(data);
+          } catch (e) {}
         }.bind(this),
 
-        headers: {
-          "Content-Type": "application/json",
-          "X-Access-Token": ""
-        }
+        headers: headers
       });
     }
   }
