@@ -33,7 +33,12 @@
       this.poller = ajax.poll(this.url, {
         success: function (xhr) {
           this.dispatch(JSON.parse(xhr.responseText));
-        }.bind(this)
+        }.bind(this),
+
+        headers: {
+          "Content-Type": "application/json",
+          "X-Access-Token": ""
+        }
       });
     }
   }

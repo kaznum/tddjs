@@ -80,6 +80,7 @@
   TestCase("CometClientConnectTest", {
     setUp: function () {
       this.client = Object.create(ajax.cometClient);
+      this.client.url = "/my/url";
       this.ajaxPoll = ajax.poll;
       this.ajaxCreate = ajax.create;
       this.xhr = Object.create(fakeXMLHttpRequest);
@@ -92,7 +93,6 @@
     },
 
     "test connect should start polling": function () {
-      this.client.url = "/my/url";
       ajax.poll = stubFn({});
 
       this.client.connect();
@@ -102,7 +102,6 @@
     },
 
     "test should not connect if connected": function () {
-      this.client.url = "/my/url";
       ajax.poll = stubFn({});
       this.client.connect();
 
@@ -123,7 +122,6 @@
     "test should dispatch data from request": function () {
       var data = { topic: [{id: "12345"}],
                    otherTopic: [{name: "Me"}] };
-      this.client.url = "/my/url";
       this.client.dispatch = stubFn();
 
       this.client.connect();
@@ -131,6 +129,11 @@
 
       assert(this.client.dispatch.called);
       assertEquals(data, this.client.dispatch.args[0]);
+    },
+
+    "test should provide custom header" : function () {
+      this.client.connect();
+      assertNotUndefined(this.xhr.headers["X-Access-Token"]);
     }
   });
 }());
