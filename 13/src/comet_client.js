@@ -25,6 +25,10 @@
   }
 
   function connect() {
+    if (!this.url) {
+      throw new TypeError("client url is null");
+    }
+    
     if (!this.poller) {
       this.poller = ajax.poll(this.url);
     }

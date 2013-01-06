@@ -105,6 +105,15 @@
       ajax.poll = stubFn({});
       this.client.connect();
       assertFalse(ajax.poll.called);
+    },
+
+    "test connect should throw error if no url exists": function () {
+      var client = Object.create(ajax.cometClient);
+      ajax.poll = stubFn({});
+
+      assertException(function () {
+        client.connect();
+      }, "TypeError");
     }
   });
 }());
