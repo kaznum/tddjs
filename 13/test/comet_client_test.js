@@ -76,5 +76,26 @@
       assertSame(data.myEvent[0], observers[1].args[0]);
     }
   });
+
+  TestCase("CometClientConnectTest", {
+    setUp: function () {
+      this.client = Object.create(ajax.cometClient);
+      this.ajaxPoll = ajax.poll;
+    },
+
+    tearDown: function () {
+      ajax.poll = this.ajaxPoll;
+    },
+
+    "test connect should start polling": function () {
+      this.client.url = "/my/url";
+      ajax.poll = stubFn({});
+
+      this.client.connect();
+
+      assert(ajax.poll.called);
+      assertEquals("/my/url", ajax.poll.args[0]);
+    }
+  });
 }());
 

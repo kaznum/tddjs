@@ -24,7 +24,12 @@
     this.observers.observe(topic, observer);
   }
 
+  function connect() {
+    ajax.poll(this.url);
+  }
+
   ajax.cometClient = {
+    connect: connect,
     dispatch: dispatch,
     observe: observe
   };
