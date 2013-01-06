@@ -25,7 +25,9 @@
   }
 
   function connect() {
-    ajax.poll(this.url);
+    if (!this.poller) {
+      this.poller = ajax.poll(this.url);
+    }
   }
 
   ajax.cometClient = {

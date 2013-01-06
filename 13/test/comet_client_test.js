@@ -95,6 +95,16 @@
 
       assert(ajax.poll.called);
       assertEquals("/my/url", ajax.poll.args[0]);
+    },
+
+    "test should not connect if connected": function () {
+      this.client.url = "/my/url";
+      ajax.poll = stubFn({});
+      this.client.connect();
+
+      ajax.poll = stubFn({});
+      this.client.connect();
+      assertFalse(ajax.poll.called);
     }
   });
 }());
