@@ -1,6 +1,15 @@
 (function () {
-  var ajax = tddjs.ajax;
-  var util = tddjs.util;
+  if (typeof tddjs == "undefined") {
+    return;
+  }
+
+  var ajax = tddjs.namespace("ajax");
+  var util = tddjs.namespace("util");
+
+  if (!ajax.poll || !util.observable) {
+    return;
+  }
+
   ajax.cometClient = {};
 
   function dispatch(data) {
