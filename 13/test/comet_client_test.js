@@ -152,7 +152,8 @@
   TestCase("CometClientNotifyTest", {
     setUp: function () {
       this.client = Object.create(ajax.cometClient);
-      // this.client.url = "/my/url";
+      this.client.url = "/my/url";
+      this.ajaxPost = ajax.post;
       // this.ajaxPoll = ajax.poll;
       // this.ajaxCreate = ajax.create;
       // this.xhr = Object.create(fakeXMLHttpRequest);
@@ -163,10 +164,44 @@
       // ajax.poll = this.ajaxPoll;
       // ajax.create = this.ajaxCreate;
       // Clock.reset();
+      ajax.post = this.ajaxPost;
     },
     "test notify should be function": function () {
       assertFunction(this.client.notify);
+    },
+
+    "test notify should receive topic as an argument" : function () {
+      assertException(function () {
+        this.client.notify();
+      }.bind(this), "TypeError");
+    },
+    
+    "test notify should receive data as an argument" : function () {
+      assertException(function () {
+        this.client.notify("myTopic");
+      }.bind(this), "TypeError");
+    },
+
+    "test notify should throw error if no url exists": function () {
+      var client = Object.create(ajax.cometClient);
+      assertException(function () {
+        client.notify("myTopic", {});
+      }, "TypeError");
+    },
+
+    "test notify should POST to the client.url with topic and data": function () {
+      var topic = "myTopic";
+      var data = { sample1: "data1", sample2: "data2"};
+      var expected_posted_data = JSON.stringify({topic: topic, data: data});
+
+      ajax.post = stubFn();
+      this.client.notify(topic, data);
+      assert(ajax.post.called);
+      assertEquals(this.client.url, ajax.post.args[0]);
+      assertEquals(JSON.parse(expected_posted_data), JSON.parse(ajax.post.args[1].data));
     }
+
+    
   });
 }());
 

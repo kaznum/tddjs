@@ -58,7 +58,22 @@
     }
   }
 
-  function notify() {
+  function notify(topic, data) {
+    if (!topic) {
+      throw new TypeError("Topic should be specified");
+    }
+
+    if (!data) {
+      throw new TypeError("Data should be specified");
+    }
+
+    if (!this.url) {
+      throw new TypeError("Provide client URL");
+    }
+
+    ajax.post(this.url, {
+      data: JSON.stringify({topic: topic, data: data})
+    });
   }
 
   ajax.cometClient = {
