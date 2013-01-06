@@ -148,5 +148,25 @@
       assertEquals(data.token, headers["X-Access-Token"]);
     }
   });
+
+  TestCase("CometClientNotifyTest", {
+    setUp: function () {
+      this.client = Object.create(ajax.cometClient);
+      // this.client.url = "/my/url";
+      // this.ajaxPoll = ajax.poll;
+      // this.ajaxCreate = ajax.create;
+      // this.xhr = Object.create(fakeXMLHttpRequest);
+      // ajax.create = stubFn(this.xhr);
+    },
+
+    tearDown: function () {
+      // ajax.poll = this.ajaxPoll;
+      // ajax.create = this.ajaxCreate;
+      // Clock.reset();
+    },
+    "test notify should be function": function () {
+      assertFunction(this.client.notify);
+    }
+  });
 }());
 

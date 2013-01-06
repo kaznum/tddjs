@@ -58,9 +58,13 @@
     }
   }
 
+  function notify() {
+  }
+
   ajax.cometClient = {
     connect: connect,
     dispatch: dispatch,
-    observe: observe
+    observe: observe,
+    notify: notify
   };
 }());
