@@ -26,11 +26,15 @@
 
   function connect() {
     if (!this.url) {
-      throw new TypeError("client url is null");
+      throw new TypeError("Provide client URL");
     }
     
     if (!this.poller) {
-      this.poller = ajax.poll(this.url);
+      this.poller = ajax.poll(this.url, {
+        success: function (xhr) {
+          this.dispatch(JSON.parse(xhr.responseText));
+        }.bind(this)
+      });
     }
   }
 

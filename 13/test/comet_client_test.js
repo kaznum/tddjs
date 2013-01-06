@@ -81,10 +81,14 @@
     setUp: function () {
       this.client = Object.create(ajax.cometClient);
       this.ajaxPoll = ajax.poll;
+      this.ajaxCreate = ajax.create;
+      this.xhr = Object.create(fakeXMLHttpRequest);
+      ajax.create = stubFn(this.xhr);
     },
 
     tearDown: function () {
       ajax.poll = this.ajaxPoll;
+      ajax.create = this.ajaxCreate;
     },
 
     "test connect should start polling": function () {
@@ -114,6 +118,19 @@
       assertException(function () {
         client.connect();
       }, "TypeError");
+    },
+
+    "test should dispatch data from request": function () {
+      var data = { topic: [{id: "12345"}],
+                   otherTopic: [{name: "Me"}] };
+      this.client.url = "/my/url";
+      this.client.dispatch = stubFn();
+
+      this.client.connect();
+      this.xhr.complete(200, JSON.stringify(data));
+
+      assert(this.client.dispatch.called);
+      assertEquals(data, this.client.dispatch.args[0]);
     }
   });
 }());
