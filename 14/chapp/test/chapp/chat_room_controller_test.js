@@ -6,7 +6,7 @@ var stub = require("stub");
 
 function controllerSetUp() {
   var req = this.req = new EventEmitter();
-  var res = this.res = {};
+  var res = this.res = { writeHead: stub() };
   this.controller = chatRoomController.create(req, res);
   this.controller.chatRoom = { addMessage: stub() };
   this.jsonParse = JSON.parse;
@@ -68,6 +68,17 @@ testCase(exports, "chatRoomController.post", {
     var args = this.controller.chatRoom.addMessage.args;
     test.equals(args[0], data.data.user);
     test.equals(args[1], data.data.message);
+    test.done();
+  },
+
+  "should write status header" : function (test) {
+    var data = { data: {user: "cjno", message: "hi" }};
+
+    this.controller.post();
+    this.sendRequest(data);
+
+    test.ok(this.res.writeHead.called);
+    test.equals(this.res.writeHead.args[0], 201);
     test.done();
   }
 });
