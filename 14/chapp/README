@@ -1,0 +1,5 @@
+The run_tests and run_server need to be run with the followingenvironment variables.
+
+NODE_PATH=./:./lib:./deps ./run_tests
+NODE_PATH=./:./lib:./deps ./run_server
+
