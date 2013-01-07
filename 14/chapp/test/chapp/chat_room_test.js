@@ -20,5 +20,12 @@ testCase(exports, "chatRoom.addMessage", {
       test.inherits(err, TypeError);
       test.done();
     });
+  },
+
+  "should not require a callback": function (test) {
+    test.noException(function () {
+      this.room.addMessage();
+      test.done();
+    }.bind(this));
   }
 });
