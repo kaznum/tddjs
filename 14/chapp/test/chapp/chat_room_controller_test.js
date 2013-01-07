@@ -8,7 +8,14 @@ function controllerSetUp() {
   var req = this.req = new EventEmitter();
   var res = this.res = {};
   this.controller = chatRoomController.create(req, res);
+  this.controller.chatRoom = { addMessage: stub() };
   this.jsonParse = JSON.parse;
+  this.sendRequest = function (data) {
+    var str = encodeURI(JSON.stringify(data));
+    this.req.emit("data", str.substring(0, str.length / 2));
+    this.req.emit("data", str.substring(str.length / 2));
+    this.req.emit("end");
+  };
 }
 
 function controllerTearDown() {
@@ -44,15 +51,23 @@ testCase(exports, "chatRoomController.post", {
 
   "should parse request body as JSON" : function (test) {
     var data = { data: { user: "cjno", message: "hi" }};
-    var stringData = JSON.stringify(data);
-    var str = encodeURI(stringData);
 
     JSON.parse = stub(data);
     this.controller.post();
-    this.req.emit("data", str.substring(0, str.length / 2));
-    this.req.emit("data", str.substring(str.length / 2));
-    this.req.emit("end");
-    test.equals(JSON.parse.args[0], stringData);
+    this.sendRequest(data);
+    test.equals(JSON.parse.args[0], JSON.stringify(data));
+    test.done();
+  },
+
+  "should add message from request body" : function (test) {
+    var data = {data: {user: "cjno", message: "hi" }};
+    this.controller.post();
+    this.sendRequest(data);
+
+    test.ok(this.controller.chatRoom.addMessage.called);
+    var args = this.controller.chatRoom.addMessage.args;
+    test.equals(args[0], data.data.user);
+    test.equals(args[1], data.data.message);
     test.done();
   }
 });
