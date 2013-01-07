@@ -6,7 +6,10 @@ var stub = require("stub");
 
 function controllerSetUp() {
   var req = this.req = new EventEmitter();
-  var res = this.res = { writeHead: stub() };
+  var res = this.res = {
+    writeHead: stub(),
+    end: stub()
+  };
   this.controller = chatRoomController.create(req, res);
   this.controller.chatRoom = { addMessage: stub() };
   this.jsonParse = JSON.parse;
@@ -79,6 +82,16 @@ testCase(exports, "chatRoomController.post", {
 
     test.ok(this.res.writeHead.called);
     test.equals(this.res.writeHead.args[0], 201);
+    test.done();
+  },
+
+  "should close connection" : function (test) {
+    var data = { data: {user: "cjno", message: "hi" }};
+
+    this.controller.post();
+    this.sendRequest(data);
+
+    test.ok(this.res.end.called);
     test.done();
   }
 });
