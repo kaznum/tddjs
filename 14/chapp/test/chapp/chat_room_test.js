@@ -10,5 +10,15 @@ testCase(exports, "chatRoom.addMessage", {
       test.inherits(err, TypeError);
       test.done();
     });
+  },
+
+  "should require message": function (test) {
+    var room = Object.create(chatRoom);
+
+    room.addMessage("cjno", null, function (err) {
+      test.isNotNull(err);
+      test.inherits(err, TypeError);
+      test.done();
+    });
   }
 });
