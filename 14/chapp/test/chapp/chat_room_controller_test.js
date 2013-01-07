@@ -9,3 +9,16 @@ testCase(exports, "chatRoomController", {
   }
 });
 
+testCase(exports, "charRoomController.create", {
+  "should return object with request and response": function (test) {
+    var req = {};
+    var res = {};
+    var controller = chatRoomController.create(req, res);
+
+    test.inherits(controller, chatRoomController);
+    test.strictEqual(controller.request, req);
+    test.strictEqual(controller.response, res);
+    test.done();
+  }
+});
+
