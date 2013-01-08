@@ -36,7 +36,7 @@ testCase(exports, "chatRoom.addMessage", {
   "should call callback with new object": function (test) {
     var txt = "Some message";
 
-    this.room.addMessage("cjno", txt, function (err, msg) {
+    this.room.addMessage("cjno", txt).then(function (msg) {
       test.isObject(msg);
       test.isNumber(msg.id);
       test.equals(msg.message, txt);
@@ -48,8 +48,8 @@ testCase(exports, "chatRoom.addMessage", {
   "should assign unique ids to messages": function (test) {
     var user = "cjno";
 
-    this.room.addMessage(user, "a", function (err, msg1) {
-      this.room.addMessage(user, "b", function (err, msg2) {
+    this.room.addMessage(user, "a").then( function (msg1) {
+      this.room.addMessage(user, "b").then( function (msg2) {
         test.notEquals(msg1.id, msg2.id);
         test.done();
       });
@@ -59,7 +59,7 @@ testCase(exports, "chatRoom.addMessage", {
   "should be asynchronous": function (test) {
     var id;
 
-    this.room.addMessage("cjno", "Hey", function (err, msg) {
+    this.room.addMessage("cjno", "Hey").then(function (msg) {
       id = msg.id;
     });
 
@@ -86,8 +86,8 @@ testCase(exports, "chatRoom.getMessagesSince", {
   "should get messages since given id": function (test) {
     var room = this.room;
     var user = this.user;
-    room.addMessage(user, "msg", function (e, first) {
-      room.addMessage(user, "msg2", function (e, second) {
+    room.addMessage(user, "msg").then(function (first) {
+      room.addMessage(user, "msg2").then(function (second) {
         room.getMessagesSince(first.id, function (e, msgs) {
           test.isArray(msgs);
           test.same(msgs, [second]);
@@ -110,7 +110,7 @@ testCase(exports, "chatRoom.getMessagesSince", {
     var room = this.room;
     var user = this.user;
     room.addMessage(user, "msg", function (e, first) {
-      room.addMessage(user, "msg2", function (e, second) {
+      room.addMessage(user, "msg2").then(function (second) {
         room.getMessagesSince(100, function (e, msgs) {
           test.isArray(msgs);
           test.equals(msgs.length, 0);
@@ -124,8 +124,8 @@ testCase(exports, "chatRoom.getMessagesSince", {
     var room = this.room;
     var user = this.user;
     test.noException(function () {
-      room.addMessage(user, "msg", function (e, first) {
-        room.addMessage(user, "msg2", function (e, second) {
+      room.addMessage(user, "msg").then(function (first) {
+        room.addMessage(user, "msg2").then(function (second) {
           room.getMessagesSince(first.id);
         });
       });
