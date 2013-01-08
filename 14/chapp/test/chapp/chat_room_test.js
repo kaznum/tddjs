@@ -52,3 +52,19 @@ testCase(exports, "chatRoom.addMessage", {
     }.bind(this));
   }
 });
+
+testCase(exports, "chatRoom.getMessagesSince", {
+  "should get messages since given id": function (test) {
+    var room = Object.create(chatRoom);
+    var user = "cjno";
+    room.addMessage(user, "msg", function (e, first) {
+      room.addMessage(user, "msg2", function (e, second) {
+        room.getMessagesSince(first.id, function (e, msgs) {
+          test.isArray(msgs);
+          test.same(msgs, [second]);
+          test.done();
+        });
+      });
+    });
+  }
+});
