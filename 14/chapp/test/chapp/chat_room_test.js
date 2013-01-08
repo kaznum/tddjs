@@ -1,5 +1,6 @@
 var testCase = require("nodeunit").testCase;
 var chatRoom = require("chapp/chat_room");
+var all = require("node-promise/promise").all;
 
 testCase(exports, "chatRoom.addMessage", {
   setUp: function () {
@@ -46,14 +47,17 @@ testCase(exports, "chatRoom.addMessage", {
   },
 
   "should assign unique ids to messages": function (test) {
-    var user = "cjno";
+    var room = this.room;
+    var messages = [];
+    var collect = function (msg) { messages.push(msg); };
 
-    this.room.addMessage(user, "a").then( function (msg1) {
-      this.room.addMessage(user, "b").then( function (msg2) {
-        test.notEquals(msg1.id, msg2.id);
-        test.done();
-      });
-    }.bind(this));
+    var add = all(room.addMessage("u", "a").then(collect),
+                  room.addMessage("u", "b").then(collect));
+
+    add.then(function () {
+      test.notEquals(messages[0].id, messages[1].id);
+      test.done();
+    });
   },
 
   "should be asynchronous": function (test) {
