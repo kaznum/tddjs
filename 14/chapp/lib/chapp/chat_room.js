@@ -1,28 +1,47 @@
+var id = 0;
+
 var chatRoom = {
   addMessage: function (user, message, callback) {
-    var err = null;
-    if (!user) {  err = new TypeError("user is null");  }
-    if (!message) { err = new TypeError("message is null");  }
+    process.nextTick(function () {
+      var err = null;
+      if (!user) {  err = new TypeError("user is null");  }
+      if (!message) { err = new TypeError("message is null");  }
 
-    var data;
+      var data;
 
-    if (!err) {
+      if (!err) {
+        if (!this.messages) {
+          this.messages = [];
+        }
+
+        id = this.messages.length + 1;
+        data = { id: id++, user: user, message: message};
+        this.messages.push(data);
+      }
+
+      if (typeof callback == "function") {
+        callback(err, data);
+      }
+    }.bind(this));
+  },
+
+  getMessagesSince: function (id, callback) {
+    process.nextTick(function () {
+      if (typeof callback != "function") {
+        return;
+      }
+
       if (!this.messages) {
         this.messages = [];
       }
 
-      var id = this.messages.length + 1;
-      data = { id: id++, user: user, message: message};
-      this.messages.push(data);
-    }
+      var sliced = [];
+      if (this.messages.length > id) {
+        sliced = this.messages.slice(id);
+      }
 
-    if (typeof callback == "function") {
-      callback(err, data);
-    }
-  },
-
-  getMessagesSince: function (id, callback) {
-    callback(null, this.messages.slice(id));
+      callback(null, sliced);
+    }.bind(this));
   }
 };
 
