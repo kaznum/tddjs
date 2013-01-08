@@ -1,3 +1,4 @@
+var Promise = require("node-promise/promise").Promise;
 var id = 0;
 
 var chatRoom = {
@@ -23,6 +24,8 @@ var chatRoom = {
         callback(err, data);
       }
     }.bind(this));
+
+    return new Promise();
   },
 
   getMessagesSince: function (id, callback) {

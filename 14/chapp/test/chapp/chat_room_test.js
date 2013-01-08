@@ -63,6 +63,13 @@ testCase(exports, "chatRoom.addMessage", {
       test.equals(msgs.length, 0);
       test.done();
     });
+  },
+
+  "should return a promise": function (test) {
+    var result = this.room.addMessage("cjno", "message");
+    test.isObject(result);
+    test.isFunction(result.then);
+    test.done();
   }
 });
 
