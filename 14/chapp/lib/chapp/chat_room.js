@@ -2,7 +2,7 @@ var Promise = require("node-promise/promise").Promise;
 var id = 0;
 
 var chatRoom = {
-  addMessage: function (user, message, callback) {
+  addMessage: function (user, message) {
     var promise = new Promise();
     process.nextTick(function () {
       var err = null;
@@ -22,10 +22,6 @@ var chatRoom = {
         promise.resolve(data);
       }
 
-      if (typeof callback == "function") {
-        callback(err, data);
-      }
-
       if (err) {
         promise.reject(err, true);
       }
@@ -34,23 +30,20 @@ var chatRoom = {
     return promise;
   },
 
-  getMessagesSince: function (id, callback) {
-    process.nextTick(function () {
-      if (typeof callback != "function") {
-        return;
-      }
+  getMessagesSince: function (id) {
+    var promise = new Promise();
 
+    process.nextTick(function () {
       if (!this.messages) {
         this.messages = [];
       }
-
       var sliced = [];
       if (this.messages.length > id) {
         sliced = this.messages.slice(id);
       }
-
-      callback(null, sliced);
+      promise.resolve(sliced);
     }.bind(this));
+    return promise;
   }
 };
 

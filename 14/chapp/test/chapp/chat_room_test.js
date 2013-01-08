@@ -67,7 +67,7 @@ testCase(exports, "chatRoom.addMessage", {
       id = msg.id;
     });
 
-    this.room.getMessagesSince(id - 1, function (err, msgs) {
+    this.room.getMessagesSince(id - 1).then(function (msgs) {
       test.equals(msgs.length, 0);
       test.done();
     });
@@ -92,7 +92,7 @@ testCase(exports, "chatRoom.getMessagesSince", {
     var user = this.user;
     room.addMessage(user, "msg").then(function (first) {
       room.addMessage(user, "msg2").then(function (second) {
-        room.getMessagesSince(first.id, function (e, msgs) {
+        room.getMessagesSince(first.id).then(function (msgs) {
           test.isArray(msgs);
           test.same(msgs, [second]);
           test.done();
@@ -103,7 +103,7 @@ testCase(exports, "chatRoom.getMessagesSince", {
 
   "should return empty array if no message exists": function (test) {
     var room = this.room;
-    room.getMessagesSince(0, function (e, msgs) {
+    room.getMessagesSince(0).then(function (msgs) {
       test.isArray(msgs);
       test.equals(msgs.length, 0);
       test.done();
@@ -113,9 +113,9 @@ testCase(exports, "chatRoom.getMessagesSince", {
   "should return empty array if index is over the messages' length": function (test) {
     var room = this.room;
     var user = this.user;
-    room.addMessage(user, "msg", function (e, first) {
+    room.addMessage(user, "msg").then(function (first) {
       room.addMessage(user, "msg2").then(function (second) {
-        room.getMessagesSince(100, function (e, msgs) {
+        room.getMessagesSince(100).then(function (msgs) {
           test.isArray(msgs);
           test.equals(msgs.length, 0);
           test.done();
@@ -124,7 +124,7 @@ testCase(exports, "chatRoom.getMessagesSince", {
     });
   },
 
-  "should throw TypeError if callback is not function": function (test) {
+  "should not throw TypeError if callback is not function": function (test) {
     var room = this.room;
     var user = this.user;
     test.noException(function () {
@@ -135,6 +135,18 @@ testCase(exports, "chatRoom.getMessagesSince", {
       });
     });
     test.done();
-  }
+  },
 
+  "should return a promise": function (test) {
+    var room = this.room;
+    var user = this.user;
+    room.addMessage(user, "msg").then(function (first) {
+      room.addMessage(user, "msg2").then(function (second) {
+        var result = room.getMessagesSince(first.id);
+        test.isObject(result);
+        test.isFunction(result.then);
+        test.done();
+      });
+    });
+  }
 });
