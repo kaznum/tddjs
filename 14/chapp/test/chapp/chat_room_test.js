@@ -7,7 +7,9 @@ testCase(exports, "chatRoom.addMessage", {
   },
 
   "should require username": function (test) {
-    this.room.addMessage(null, "a message", function (err) {
+    var promise = this.room.addMessage(null, "message");
+
+    promise.then(function () {}, function (err) {
       test.isNotNull(err);
       test.inherits(err, TypeError);
       test.done();
@@ -15,7 +17,9 @@ testCase(exports, "chatRoom.addMessage", {
   },
 
   "should require message": function (test) {
-    this.room.addMessage("cjno", null, function (err) {
+    var promise = this.room.addMessage("cjno", null);
+
+    promise.then(function () {}, function (err) {
       test.isNotNull(err);
       test.inherits(err, TypeError);
       test.done();

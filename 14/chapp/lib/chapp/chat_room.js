@@ -3,6 +3,7 @@ var id = 0;
 
 var chatRoom = {
   addMessage: function (user, message, callback) {
+    var promise = new Promise();
     process.nextTick(function () {
       var err = null;
       if (!user) {  err = new TypeError("user is null");  }
@@ -23,9 +24,13 @@ var chatRoom = {
       if (typeof callback == "function") {
         callback(err, data);
       }
+
+      if (err) {
+        promise.reject(err, true);
+      }
     }.bind(this));
 
-    return new Promise();
+    return promise;
   },
 
   getMessagesSince: function (id, callback) {
