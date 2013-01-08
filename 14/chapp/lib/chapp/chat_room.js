@@ -5,10 +5,16 @@ var chatRoom = {
     var err = null;
     if (!user) {  err = new TypeError("user is null");  }
     if (!message) { err = new TypeError("message is null");  }
-    if (typeof callback == "function") {
-      callback(err);
+
+    var data;
+
+    if (!err) {
+      data = { id: 1, user: user, message: message};
     }
-    //sys.puts(user + ": " + message);
+
+    if (typeof callback == "function") {
+      callback(err, data);
+    }
   }
 };
 

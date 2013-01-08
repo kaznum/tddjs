@@ -27,5 +27,17 @@ testCase(exports, "chatRoom.addMessage", {
       this.room.addMessage();
       test.done();
     }.bind(this));
+  },
+
+  "should call callback with new object": function (test) {
+    var txt = "Some message";
+
+    this.room.addMessage("cjno", txt, function (err, msg) {
+      test.isObject(msg);
+      test.isNumber(msg.id);
+      test.equals(msg.message, txt);
+      test.equals(msg.user, "cjno");
+      test.done();
+    });
   }
 });
