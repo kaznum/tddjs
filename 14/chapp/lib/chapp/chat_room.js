@@ -1,5 +1,7 @@
 var sys = require("sys");
 
+var id = 0;
+
 var chatRoom = {
   addMessage: function (user, message, callback) {
     var err = null;
@@ -9,7 +11,7 @@ var chatRoom = {
     var data;
 
     if (!err) {
-      data = { id: 1, user: user, message: message};
+      data = { id: id++, user: user, message: message};
     }
 
     if (typeof callback == "function") {

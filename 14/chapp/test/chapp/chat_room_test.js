@@ -39,5 +39,16 @@ testCase(exports, "chatRoom.addMessage", {
       test.equals(msg.user, "cjno");
       test.done();
     });
+  },
+
+  "should assign unique ids to messages": function (test) {
+    var user = "cjno";
+
+    this.room.addMessage(user, "a", function (err, msg1) {
+      this.room.addMessage(user, "b", function (err, msg2) {
+        test.notEquals(msg1.id, msg2.id);
+        test.done();
+      });
+    }.bind(this));
   }
 });
