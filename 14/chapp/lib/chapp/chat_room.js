@@ -1,50 +1,50 @@
 var Promise = require("node-promise/promise").Promise;
 var id = 0;
+var EventEmitter = require("events").EventEmitter;
+var chatRoom = Object.create(EventEmitter.prototype);
 
-var chatRoom = {
-  addMessage: function (user, message) {
-    var promise = new Promise();
-    process.nextTick(function () {
-      var err = null;
-      if (!user) {  err = new TypeError("user is null");  }
-      if (!message) { err = new TypeError("message is null");  }
+chatRoom.addMessage = function (user, message) {
+  var promise = new Promise();
+  process.nextTick(function () {
+    var err = null;
+    if (!user) {  err = new TypeError("user is null");  }
+    if (!message) { err = new TypeError("message is null");  }
 
-      var data;
+    var data;
 
-      if (!err) {
-        if (!this.messages) {
-          this.messages = [];
-        }
-
-        id = this.messages.length + 1;
-        data = { id: id++, user: user, message: message};
-        this.messages.push(data);
-        promise.resolve(data);
-      }
-
-      if (err) {
-        promise.reject(err, true);
-      }
-    }.bind(this));
-
-    return promise;
-  },
-
-  getMessagesSince: function (id) {
-    var promise = new Promise();
-
-    process.nextTick(function () {
+    if (!err) {
       if (!this.messages) {
         this.messages = [];
       }
-      var sliced = [];
-      if (this.messages.length > id) {
-        sliced = this.messages.slice(id);
-      }
-      promise.resolve(sliced);
-    }.bind(this));
-    return promise;
-  }
+
+      id = this.messages.length + 1;
+      data = { id: id++, user: user, message: message};
+      this.messages.push(data);
+      promise.resolve(data);
+    }
+
+    if (err) {
+      promise.reject(err, true);
+    }
+  }.bind(this));
+
+  return promise;
+};
+
+chatRoom.getMessagesSince = function (id) {
+  var promise = new Promise();
+
+  process.nextTick(function () {
+    if (!this.messages) {
+      this.messages = [];
+    }
+    var sliced = [];
+    if (this.messages.length > id) {
+      sliced = this.messages.slice(id);
+    }
+    promise.resolve(sliced);
+  }.bind(this));
+  return promise;
 };
 
 module.exports = chatRoom;

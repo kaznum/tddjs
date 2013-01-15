@@ -150,3 +150,11 @@ testCase(exports, "chatRoom.getMessagesSince", {
     });
   }
 });
+
+testCase(exports, "chatRoom", {
+  "should be event emitter": function (test) {
+    test.isFunction(chatRoom.addListener);
+    test.isFunction(chatRoom.emit);
+    test.done();
+  }
+});
