@@ -78,6 +78,18 @@ testCase(exports, "chatRoom.addMessage", {
     test.isObject(result);
     test.isFunction(result.then);
     test.done();
+  },
+
+  "should emit 'message' event": function (test) {
+    var message;
+    this.room.addListener("message", function(m) {
+      message = m;
+    });
+
+    this.room.addMessage("cjno", "msg").then(function(m) {
+      test.same(m, message);
+      test.done();
+    });
   }
 });
 

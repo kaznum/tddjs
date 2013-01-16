@@ -20,10 +20,9 @@ chatRoom.addMessage = function (user, message) {
       id = this.messages.length + 1;
       data = { id: id++, user: user, message: message};
       this.messages.push(data);
+      this.emit("message", data);
       promise.resolve(data);
-    }
-
-    if (err) {
+    } else {
       promise.reject(err, true);
     }
   }.bind(this));
