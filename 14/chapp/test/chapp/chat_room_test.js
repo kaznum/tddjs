@@ -1,11 +1,15 @@
 var testCase = require("nodeunit").testCase;
 var chatRoom = require("chapp/chat_room");
 var all = require("node-promise/promise").all;
+var Promise = require("node-promise/promise").Promise;
+var stub = require("stub");
+
+var chatRoomSetup = function () {
+  this.room = Object.create(chatRoom);
+};
 
 testCase(exports, "chatRoom.addMessage", {
-  setUp: function () {
-    this.room = Object.create(chatRoom);
-  },
+  setUp: chatRoomSetup,
 
   "should require username": function (test) {
     var promise = this.room.addMessage(null, "message");
@@ -94,10 +98,7 @@ testCase(exports, "chatRoom.addMessage", {
 });
 
 testCase(exports, "chatRoom.getMessagesSince", {
-  setUp: function () {
-    this.room = Object.create(chatRoom);
-    this.user = "cjno";
-  },
+  setUp: chatRoomSetup,
 
   "should get messages since given id": function (test) {
     var room = this.room;
@@ -168,5 +169,20 @@ testCase(exports, "chatRoom", {
     test.isFunction(chatRoom.addListener);
     test.isFunction(chatRoom.emit);
     test.done();
+  }
+});
+
+testCase(exports, "chatRoom.waitForMessagesSince", {
+  setUp: chatRoomSetup,
+
+  "should yield existing messages": function (test) {
+    var promise = new Promise();
+    promise.resolve([{ id: 43 }]);
+    this.room.getMessagesSince = stub(promise);
+
+    this.room.waitForMessagesSince(42).then(function (m) {
+      test.same([{ id: 43 }], m);
+      test.done();
+    });
   }
 });
