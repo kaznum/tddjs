@@ -4,12 +4,10 @@ var all = require("node-promise/promise").all;
 var Promise = require("node-promise/promise").Promise;
 var stub = require("stub");
 
-var chatRoomSetup = function () {
-  this.room = Object.create(chatRoom);
-};
-
 testCase(exports, "chatRoom.addMessage", {
-  setUp: chatRoomSetup,
+  setUp: function () {
+    this.room = Object.create(chatRoom);
+  },
 
   "should require username": function (test) {
     var promise = this.room.addMessage(null, "message");
@@ -98,7 +96,10 @@ testCase(exports, "chatRoom.addMessage", {
 });
 
 testCase(exports, "chatRoom.getMessagesSince", {
-  setUp: chatRoomSetup,
+  setUp: function () {
+    this.room = Object.create(chatRoom);
+    this.user = "cjno";
+  },
 
   "should get messages since given id": function (test) {
     var room = this.room;
@@ -173,7 +174,9 @@ testCase(exports, "chatRoom", {
 });
 
 testCase(exports, "chatRoom.waitForMessagesSince", {
-  setUp: chatRoomSetup,
+  setUp: function () {
+    this.room = Object.create(chatRoom);
+  },
 
   "should yield existing messages": function (test) {
     var promise = new Promise();
