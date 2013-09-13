@@ -1,5 +1,6 @@
 (function () {
   var userController = tddjs.chat.userFormController;
+  var dom = tddjs.namespace("dom");
 
   TestCase("UserFormControllerTest", {
     "test should be object": function () {
@@ -12,14 +13,27 @@
   });
 
   TestCase("UserFormControllerSetViewTest", {
-    "test should add js-chat class": function () {
-      var controller = Object.create(userController);
-      var element = {};
+    setUp: function () {
+      this.controller = Object.create(userController);
+      this.element = {};
+      dom.addEventHandler = stubFn();
+    },
 
-      controller.setView(element);
-      assertClassName("js-chat", element);
+    "test should add js-chat class": function () {
+      this.controller.setView(this.element);
+      assertClassName("js-chat", this.element);
+    },
+
+    "test should handle submit event": function () {
+      this.controller.setView(this.element);
+
+      assert(dom.addEventHandler.called);
+      assertSame(this.element, dom.addEventHandler.args[0]);
+      assertEquals("submit", dom.addEventHandler.args[1]);
+      assertFunction(dom.addEventHandler.args[2]);
     }
   });
+
 }());
 
 
