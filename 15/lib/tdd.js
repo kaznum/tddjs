@@ -1,5 +1,5 @@
-/*jslint indent: 2, onevar: false, plusplus: false, eqeqeq: false, nomen: false, browser: true*/
-/*globals window*/
+/*jslint indent: 2, onevar: false, plusplus: false, eqeqeq: false, nomen: false*/
+/*globals document, window*/
 var tddjs = (function () {
   function namespace(string) {
     var object = this;
@@ -142,118 +142,11 @@ tddjs.isHostMethod = (function () {
   return isHostMethod;
 }());
 
-tddjs.isEventSupported = (function () {
-  var TAGNAMES = {
-    select: "input",
-    change: "input",
-    submit: "form",
-    reset: "form",
-    error: "img",
-    load: "img",
-    abort: "img"
-  };
-
-  function isEventSupported(eventName) {
-    var tagName = TAGNAMES[eventName];
-    var el = document.createElement(tagName || "div");
-    eventName = "on" + eventName;
-    var isSupported = (eventName in el);
-
-    if (!isSupported) {
-      el.setAttribute(eventName, "return;");
-      isSupported = typeof el[eventName] == "function";
-    }
-
-    el = null;
-
-    return isSupported;
+tddjs.isLocal = (function () {
+  function isLocal() {
+    return !!(window.location &&
+              window.location.protocol.indexOf("file:") === 0);
   }
 
-  return isEventSupported;
-}());
-
-(function () {
-  var dom = tddjs.namespace("dom");
-  var _addEventHandler;
-
-  if (!Function.prototype.call) {
-    return;
-  }
-
-  function normalizeEvent(event) {
-    event.preventDefault = function () {
-      event.returnValue = false;
-    };
-
-    event.target = event.srcElement;
-    // More normalization
-
-    return event;
-  }
-
-  if (tddjs.isHostMethod(document, "addEventListener")) {
-    _addEventHandler = function (element, event, listener) {
-      element.addEventListener(event, listener, false);
-    };
-  } else if (tddjs.isHostMethod(document, "attachEvent")) {
-    _addEventHandler = function (element, event, listener) {
-      element.attachEvent("on" + event, function () {
-        var event = normalizeEvent(window.event);
-        listener.call(element, event);
-
-        return event.returnValue;
-      });
-    };
-  } else {
-    return;
-  }
-
-  function mouseenter(el, listener) {
-    var current = null;
-
-    _addEventHandler(el, "mouseover", function (event) {
-      if (current !== el) {
-        current = el;
-        listener.call(el, event);
-      }
-    });
-
-    _addEventHandler(el, "mouseout", function (e) {
-      var target = e.relatedTarget || e.toElement;
-
-      try {
-        if (target && !target.nodeName) {
-          target = target.parentNode;
-        }
-      } catch (exp) {
-        return;
-      }
-
-      if (el !== target && !dom.contains(el, target)) {
-        current = null;
-      }
-    });
-  }
-
-  var custom = dom.customEvents = {};
-
-  if (!tddjs.isEventSupported("mouseenter") &&
-      tddjs.isEventSupported("mouseover") &&
-      tddjs.isEventSupported("mouseout")) {
-    custom.mouseenter = mouseenter;
-  }
-
-  dom.supportsEvent = function (event) {
-    return tddjs.isEventSupported(event) || !!custom[event];
-  };
-
-  function addEventHandler(element, event, listener) {
-    if (dom.customEvents && dom.customEvents[event]) {
-      return dom.customEvents[event](element, listener);
-    }
-
-    return _addEventHandler(element, event, listener);
-  }
-
-  dom.addEventHandler = addEventHandler;
+  return isLocal;
 }());
