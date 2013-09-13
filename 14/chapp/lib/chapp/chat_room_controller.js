@@ -25,6 +25,10 @@ var chatRoomController = {
                                 this.response.end();
                               }.bind(this));
     }.bind(this));
+  },
+
+  get: function () {
+    this.chatRoom.waitForMessagesSince(0);
   }
 };
 

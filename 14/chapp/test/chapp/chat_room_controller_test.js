@@ -126,3 +126,20 @@ testCase(exports, "chatRoomController.post", {
     test.done();
   }
 });
+
+testCase(exports, "chatRoomController.get", {
+  setUp: controllerSetUp,
+  tearDown: controllerTearDown,
+
+  "should wait for any message": function (test) {
+    this.req.headers = { "x-access-token": "" };
+    var chatRoom = this.controller.chatRoom;
+    chatRoom.waitForMessagesSince = stub();
+
+    this.controller.get();
+
+    test.ok(chatRoom.waitForMessagesSince.called);
+    test.equals(chatRoom.waitForMessagesSince.args[0], 0);
+    test.done();
+  }
+});
