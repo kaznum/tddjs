@@ -7,14 +7,22 @@ var stub = require("stub");
 
 function controllerSetUp() {
   var req = this.req = new EventEmitter();
+  req.headers = { "x-access-token": "" };
+
   var res = this.res = {
     writeHead: stub(),
     end: stub()
   };
-  var promise = this.addMessagePromise = new Promise();
-
   this.controller = chatRoomController.create(req, res);
-  this.controller.chatRoom = { addMessage: stub(promise) };
+
+  var add = this.addMessagePromise = new Promise();
+  var wait = this.waitForMessagesPromise = new Promise();
+
+  this.controller.chatRoom = {
+    addMessage: stub(add),
+    waitForMessagesSince: stub(wait)
+  };
+
   this.jsonParse = JSON.parse;
   this.sendRequest = function (data) {
     var str = encodeURI(JSON.stringify(data));
@@ -22,6 +30,7 @@ function controllerSetUp() {
     this.req.emit("data", str.substring(str.length / 2));
     this.req.emit("end");
   };
+
 }
 
 function controllerTearDown() {
@@ -134,7 +143,7 @@ testCase(exports, "chatRoomController.get", {
   "should wait for any message": function (test) {
     this.req.headers = { "x-access-token": "" };
     var chatRoom = this.controller.chatRoom;
-    chatRoom.waitForMessagesSince = stub();
+    chatRoom.waitForMessagesSince = stub(new Promise());
 
     this.controller.get();
 
@@ -146,7 +155,7 @@ testCase(exports, "chatRoomController.get", {
   "should wait for messages since X-Access-Token": function (test) {
     this.req.headers = { "x-access-token": "2" }
     var chatRoom = this.controller.chatRoom;
-    chatRoom.waitForMessagesSince = stub();
+    chatRoom.waitForMessagesSince = stub(new Promise());
 
     this.controller.get();
 
@@ -171,6 +180,22 @@ testCase(exports, "chatRoomController.respond", {
 
     test.ok(this.res.end.called);
     test.done();
+  },
+
+  "should respond with formatted data": function (test) {
+    this.controller.respond = stub();
+    var messages = [{ user: "cjno", message: "hi" }];
+    this.waitForMessagesPromise.resolve(messages);
+
+    this.controller.get();
+
+    process.nextTick(function () {
+      test.ok(this.controller.respond.called);
+      var args = this.controller.respond.args;
+      test.same(args[0], 200);
+      test.same(args[1].message, messages);
+      test.done();
+    }.bind(this));
   }
 });
 
