@@ -187,5 +187,20 @@ testCase(exports, "chatRoom.waitForMessagesSince", {
       test.same([{ id: 43 }], m);
       test.done();
     });
+  },
+
+  "should add listener when no messages": function (test) {
+    this.room.addListener = stub();
+    var promise = new Promise();
+    promise.resolve([]); // addMessageが遅延している場合は、[]が返される
+    this.room.getMessagesSince = stub(promise);
+
+    this.room.waitForMessagesSince(0);
+
+    process.nextTick(function () {
+      test.equals(this.room.addListener.args[0], "message");
+      test.isFunction(this.room.addListener.args[1]);
+      test.done();
+    }.bind(this));
   }
 });
