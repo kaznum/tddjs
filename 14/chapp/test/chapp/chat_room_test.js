@@ -218,6 +218,21 @@ testCase(exports, "chatRoom.waitForMessagesSince", {
     process.nextTick(function () {
       this.room.addMessage(user, msg);
     }.bind(this));
+  },
+
+  "should clear listener after waiting": function (test) {
+    var user = "cjno";
+    var msg = "Are you waiting for this?";
+
+    this.room.waitForMessagesSince(0).then(function (msgs) {
+      test.equals(this.room.listeners("message").length, 0);
+      test.done();
+    }.bind(this));
+
+    process.nextTick(function () {
+      this.room.addMessage(user, msg);
+    }.bind(this));
   }
+
 
 });
