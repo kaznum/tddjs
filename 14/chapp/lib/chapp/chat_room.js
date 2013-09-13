@@ -53,7 +53,9 @@ chatRoom.waitForMessagesSince = function (id) {
     if (messages.length > 0) {
       promise.resolve(messages);
     } else {
-      this.addListener("message", function () {});
+      this.addListener("message", function (message) {
+        promise.resolve([message])
+      });
     }
   }.bind(this));
 

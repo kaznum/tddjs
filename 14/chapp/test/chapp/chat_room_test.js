@@ -202,5 +202,22 @@ testCase(exports, "chatRoom.waitForMessagesSince", {
       test.isFunction(this.room.addListener.args[1]);
       test.done();
     }.bind(this));
+  },
+
+  "new message should resolve waiting": function (test) {
+    var user = "cjno";
+    var msg = "Are you waiting for this?";
+
+    this.room.waitForMessagesSince(0).then(function (msgs) {
+      test.isArray(msgs);
+      test.equals(msgs[0].user, user);
+      test.equals(msgs[0].message, msg);
+      test.done();
+    });
+
+    process.nextTick(function () {
+      this.room.addMessage(user, msg);
+    }.bind(this));
   }
+
 });
