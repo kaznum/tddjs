@@ -141,5 +141,17 @@ testCase(exports, "chatRoomController.get", {
     test.ok(chatRoom.waitForMessagesSince.called);
     test.equals(chatRoom.waitForMessagesSince.args[0], 0);
     test.done();
+  },
+
+  "should wait for messages since X-Access-Token": function (test) {
+    this.req.headers = { "x-access-token": "2" }
+    var chatRoom = this.controller.chatRoom;
+    chatRoom.waitForMessagesSince = stub();
+
+    this.controller.get();
+
+    test.ok(chatRoom.waitForMessagesSince.called);
+    test.equals(chatRoom.waitForMessagesSince.args[0], 2);
+    test.done();
   }
 });

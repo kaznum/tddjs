@@ -28,7 +28,8 @@ var chatRoomController = {
   },
 
   get: function () {
-    this.chatRoom.waitForMessagesSince(0);
+    var id = this.request.headers["x-access-token"] || 0;
+    this.chatRoom.waitForMessagesSince(id);
   }
 };
 
