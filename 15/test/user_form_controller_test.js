@@ -10,5 +10,16 @@
       assertFunction(userController.setView);
     }
   });
+
+  TestCase("UserFormControllerSetViewTest", {
+    "test should add js-chat class": function () {
+      var controller = Object.create(userController);
+      var element = {};
+
+      controller.setView(element);
+      assertClassName("js-chat", element);
+    }
+  });
 }());
+
 
