@@ -39,8 +39,14 @@ var chatRoomController = {
     }.bind(this));
   },
 
-  respond: function (status) {
-    this.response.writeHead(201);
+  respond: function (status, data) {
+    var stringified = "{}";
+    if (data) {
+      stringified = JSON.stringify(data);
+    }
+
+    this.response.writeHead(status, { "Content-Type": "application/json", "Content-Length": stringified.length });
+    this.response.write(stringified);
     this.response.end();
   }
 };

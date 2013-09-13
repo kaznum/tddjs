@@ -11,6 +11,7 @@ function controllerSetUp() {
 
   var res = this.res = {
     writeHead: stub(),
+    write: stub(),
     end: stub()
   };
   this.controller = chatRoomController.create(req, res);
@@ -208,7 +209,58 @@ testCase(exports, "chatRoomController.respond", {
       test.same(this.controller.respond.args[1].token, 25);
       test.done();
     }.bind(this));
-  }
+  },
+
+
+  "body should be JSON encoded string": function (test) {
+    var messages = [{id:24, message: "hello"},
+                    {id:25, message: "How are you"}];
+
+    var data = { message: messages, token: 25 };
+    var stringified_data = JSON.stringify(data);
+
+    this.waitForMessagesPromise.resolve(messages);
+
+    this.controller.get();
+
+    process.nextTick(function () {
+      test.equals(this.res.write.args[0], stringified_data);
+
+      test.done();
+    }.bind(this));
+  },
+
+  "should include Content-Type in response": function (test) {
+    this.waitForMessagesPromise.resolve([{id:24, message: "hello"},
+                                         {id:25, message: "How are you"}]);
+
+    this.controller.get();
+
+    process.nextTick(function () {
+      test.ok(this.res.writeHead.called);
+      test.equals(this.res.writeHead.args[1]["Content-Type"], "application/json");
+      test.done();
+    }.bind(this));
+  },
+
+  "should include Content-Length in response": function (test) {
+    var messages = [{id:24, message: "hello"},
+                    {id:25, message: "How are you"}];
+
+    var data = { message: messages, token: 25 };
+    var stringified_data = JSON.stringify(data);
+
+    this.waitForMessagesPromise.resolve(messages);
+
+    this.controller.get();
+
+    process.nextTick(function () {
+
+      test.equals(this.res.writeHead.args[1]["Content-Length"], stringified_data.length);
+      test.done();
+    }.bind(this));
+  },
+
 });
 
 
