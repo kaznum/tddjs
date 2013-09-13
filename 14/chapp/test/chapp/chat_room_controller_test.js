@@ -196,6 +196,18 @@ testCase(exports, "chatRoomController.respond", {
       test.same(args[1].message, messages);
       test.done();
     }.bind(this));
+  },
+
+  "should include token in response": function (test) {
+    this.controller.respond = stub();
+    this.waitForMessagesPromise.resolve([{id:24}, {id:25}]);
+
+    this.controller.get();
+
+    process.nextTick(function () {
+      test.same(this.controller.respond.args[1].token, 25);
+      test.done();
+    }.bind(this));
   }
 });
 

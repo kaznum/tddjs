@@ -32,7 +32,10 @@ var chatRoomController = {
     var wait = this.chatRoom.waitForMessagesSince(id);
 
     wait.then(function (msgs) {
-      this.respond(200, { message: msgs });
+      this.respond(200, {
+        message: msgs,
+        token: msgs[msgs.length - 1].id
+      });
     }.bind(this));
   },
 
