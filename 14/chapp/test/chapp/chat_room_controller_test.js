@@ -155,3 +155,23 @@ testCase(exports, "chatRoomController.get", {
     test.done();
   }
 });
+
+testCase(exports, "chatRoomController.respond", {
+  setUp: controllerSetUp,
+
+  "should write status code": function (test) {
+    this.controller.respond(201);
+    test.ok(this.res.writeHead.called);
+    test.equals(this.res.writeHead.args[0], 201);
+    test.done();
+  },
+
+  "should close connection": function (test) {
+    this.controller.respond(201);
+
+    test.ok(this.res.end.called);
+    test.done();
+  }
+});
+
+
