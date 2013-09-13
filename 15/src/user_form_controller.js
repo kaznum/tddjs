@@ -1,0 +1,2 @@
+tddjs.namespace("chat").userFormController = {};
+
