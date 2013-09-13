@@ -21,6 +21,40 @@ var tddjs = (function () {
   };
 }());
 
+tddjs.uid = (function () {
+  var id = 0;
+
+  function uid(object) {
+    if (typeof object.__uid != "number") {
+      object.__uid = id++;
+    }
+
+    return object.__uid;
+  }
+
+  return uid;
+}());
+
+tddjs.iterator = (function () {
+  function iterator(collection) {
+    var index = 0;
+    var length = collection.length;
+
+    function next() {
+      var item = collection[index++];
+      next.hasNext = index < length;
+
+      return item;
+    }
+
+    next.hasNext = index < length;
+
+    return next;
+  }
+
+  return iterator;
+}());
+
 tddjs.isOwnProperty = (function () {
   var hasOwn = Object.prototype.hasOwnProperty;
 
@@ -142,11 +176,128 @@ tddjs.isHostMethod = (function () {
   return isHostMethod;
 }());
 
-tddjs.isLocal = (function () {
-  function isLocal() {
-    return !!(window.location &&
-              window.location.protocol.indexOf("file:") === 0);
+tddjs.isEventSupported = (function () {
+  var TAGNAMES = {
+    select: "input",
+    change: "input",
+    submit: "form",
+    reset: "form",
+    error: "img",
+    load: "img",
+    abort: "img"
+  };
+
+  function isEventSupported(eventName) {
+    var tagName = TAGNAMES[eventName];
+    var el = document.createElement(tagName || "div");
+    eventName = "on" + eventName;
+    var isSupported = (eventName in el);
+
+    if (!isSupported) {
+      el.setAttribute(eventName, "return;");
+      isSupported = typeof el[eventName] == "function";
+    }
+
+    el = null;
+
+    return isSupported;
   }
 
-  return isLocal;
+  return isEventSupported;
+}());
+
+tddjs.isCSSPropertySupported = (function () {
+  var element = document.createElement("div");
+
+  function isCSSPropertySupported(property) {
+    return typeof element.style[property] == "string";
+  }
+
+  return isCSSPropertySupported;
+}());
+
+(function () {
+  var dom = tddjs.namespace("dom");
+  var _addEventHandler;
+
+  if (!Function.prototype.call) {
+    return;
+  }
+
+  function normalizeEvent(event) {
+    event.preventDefault = function () {
+      event.returnValue = false;
+    };
+
+    event.target = event.srcElement;
+    // More normalization
+
+    return event;
+  }
+
+  if (tddjs.isHostMethod(document, "addEventListener")) {
+    _addEventHandler = function (element, event, listener) {
+      element.addEventListener(event, listener, false);
+    };
+  } else if (tddjs.isHostMethod(document, "attachEvent")) {
+    _addEventHandler = function (element, event, listener) {
+      element.attachEvent("on" + event, function () {
+        var event = normalizeEvent(window.event);
+        listener.call(element, event);
+
+        return event.returnValue;
+      });
+    };
+  } else {
+    return;
+  }
+
+  function mouseenter(el, listener) {
+    var current = null;
+
+    _addEventHandler(el, "mouseover", function (event) {
+      if (current !== el) {
+        current = el;
+        listener.call(el, event);
+      }
+    });
+
+    _addEventHandler(el, "mouseout", function (e) {
+      var target = e.relatedTarget || e.toElement;
+
+      try {
+        if (target && !target.nodeName) {
+          target = target.parentNode;
+        }
+      } catch (exp) {
+        return;
+      }
+
+      if (el !== target && !dom.contains(el, target)) {
+        current = null;
+      }
+    });
+  }
+
+  var custom = dom.customEvents = {};
+
+  if (!tddjs.isEventSupported("mouseenter") &&
+      tddjs.isEventSupported("mouseover") &&
+      tddjs.isEventSupported("mouseout")) {
+    custom.mouseenter = mouseenter;
+  }
+
+  dom.supportsEvent = function (event) {
+    return tddjs.isEventSupported(event) || !!custom[event];
+  };
+
+  function addEventHandler(element, event, listener) {
+    if (dom.customEvents && dom.customEvents[event]) {
+      return dom.customEvents[event](element, listener);
+    }
+
+    return _addEventHandler(element, event, listener);
+  }
+
+  dom.addEventHandler = addEventHandler;
 }());
