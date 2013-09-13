@@ -91,6 +91,20 @@ testCase(exports, "chatRoomController.post", {
     }.bind(this));
   },
 
+  "should write status header when addMessage has error": function (test) {
+    var data = { data: {user: "", message: "hi" } };
+
+    this.controller.post();
+    this.sendRequest(data);
+    this.addMessagePromise.reject(new TypeError("User is missing."), true);
+
+    process.nextTick(function () {
+      test.ok(this.res.writeHead.called);
+      test.equals(this.res.writeHead.args[0], 500);
+      test.done();
+    }.bind(this));
+  },
+
   "should close connection when addMessage resolved" : function (test) {
     var data = { data: {user: "cjno", message: "hi" }};
 

@@ -20,6 +20,9 @@ var chatRoomController = {
                               ).then(function () {
                                 this.response.writeHead(201);
                                 this.response.end();
+                              }.bind(this), function () {
+                                this.response.writeHead(500);
+                                this.response.end();
                               }.bind(this));
     }.bind(this));
   }
