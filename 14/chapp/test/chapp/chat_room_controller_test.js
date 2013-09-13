@@ -1,5 +1,6 @@
 var testCase = require("nodeunit").testCase;
 var chatRoomController = require("chapp/chat_room_controller");
+var Promise = require("node-promise/promise").Promise;
 
 var EventEmitter = require("events").EventEmitter;
 var stub = require("stub");
@@ -10,8 +11,10 @@ function controllerSetUp() {
     writeHead: stub(),
     end: stub()
   };
+  var promise = this.addMessagePromise = new Promise();
+
   this.controller = chatRoomController.create(req, res);
-  this.controller.chatRoom = { addMessage: stub() };
+  this.controller.chatRoom = { addMessage: stub(promise) };
   this.jsonParse = JSON.parse;
   this.sendRequest = function (data) {
     var str = encodeURI(JSON.stringify(data));
@@ -74,24 +77,38 @@ testCase(exports, "chatRoomController.post", {
     test.done();
   },
 
-  "should write status header" : function (test) {
-    var data = { data: {user: "cjno", message: "hi" }};
+  "should write status header when addMessage resolves": function (test) {
+    var data = { data: {user: "cjno", message: "hi" } };
 
     this.controller.post();
     this.sendRequest(data);
+    this.addMessagePromise.resolve({});
 
-    test.ok(this.res.writeHead.called);
-    test.equals(this.res.writeHead.args[0], 201);
-    test.done();
+    process.nextTick(function () {
+      test.ok(this.res.writeHead.called);
+      test.equals(this.res.writeHead.args[0], 201);
+      test.done();
+    }.bind(this));
   },
 
-  "should close connection" : function (test) {
+  "should close connection when addMessage resolved" : function (test) {
     var data = { data: {user: "cjno", message: "hi" }};
 
     this.controller.post();
     this.sendRequest(data);
+    this.addMessagePromise.resolve({});
 
-    test.ok(this.res.end.called);
+    process.nextTick(function () {
+      test.ok(this.res.end.called);
+      test.done();
+    }.bind(this));
+  },
+
+  "should not respond immediately": function (test) {
+    this.controller.post();
+    this.sendRequest({ data: {} });
+
+    test.ok(!this.res.end.called);
     test.done();
   }
 });
