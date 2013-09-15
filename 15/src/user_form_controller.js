@@ -3,12 +3,17 @@ tddjs.namespace("chat").userFormController = {};
 (function () {
   var dom = tddjs.namespace("dom");
 
+  function handleSubmit(event) {
+  }
+
   function setView (element) {
     element.className = "js-chat";
-    dom.addEventHandler(element, "submit", function () {});
+    var handler = this.handleSubmit.bind(this);
+    dom.addEventHandler(element, "submit", handler);
   }
 
   tddjs.namespace("chat").userFormController = {
-    setView: setView
+    setView: setView,
+    handleSubmit: handleSubmit
   };
 }());

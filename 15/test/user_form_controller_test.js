@@ -31,6 +31,16 @@
       assertSame(this.element, dom.addEventHandler.args[0]);
       assertEquals("submit", dom.addEventHandler.args[1]);
       assertFunction(dom.addEventHandler.args[2]);
+    },
+
+    "test should handle event with bound handleSubmit": function () {
+      var stub = this.controller.handleSubmit = stubFn();
+
+      this.controller.setView(this.element);
+      dom.addEventHandler.args[2]();
+
+      assert(stub.called);
+      assertSame(this.controller, stub.thisValue);
     }
   });
 
