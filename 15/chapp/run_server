@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+//require.paths.push(--dirname);
+//require.paths.push(--dirname + "/deps");
+//require.paths.push(--dirname + "/lib");
+
+require("chapp/server").listen(process.argv[2] || 8000);
+
