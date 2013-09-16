@@ -3,9 +3,16 @@
   var dom = tddjs.namespace("dom");
 
   function userFormControllerSetUp() {
+    /*:DOC element = <form>
+      <fieldset>
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username">
+        <input type="submit" value="Enter">
+      </fieldset>
+    </form> */
     this.controller = Object.create(userController);
-    this.element = {};
     dom.addEventHandler = stubFn();
+    this.event = { preventDefault: stubFn() };
   }
 
   TestCase("UserFormControllerTest", {
@@ -50,10 +57,20 @@
     setUp: userFormControllerSetUp,
 
     "test should prevent event default action": function () {
-      var event = { preventDefault: stubFn() };
+      this.controller.handleSubmit(this.event);
+      assert(this.event.preventDefault.called);
+    },
 
-      this.controller.handleSubmit(event);
-      assert(event.preventDefault.called);
+    "test should set model.currentUser": function () {
+      var model = {};
+      var input = this.element.getElementsByTagName("input")[0];
+
+      input.value = "cjno";
+      this.controller.setModel(model);
+      this.controller.setView(this.element);
+
+      this.controller.handleSubmit(this.event);
+      assertEquals("cjno", model.currentUser);
     }
   });
 }());
