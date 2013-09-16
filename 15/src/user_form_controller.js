@@ -1,9 +1,19 @@
-tddjs.namespace("chat").userFormController = {};
-
 (function () {
-  var dom = tddjs.namespace("dom");
+  if (typeof tddjs == "undefined" ||
+      typeof document == "undefined") {
+    return;
+  }
+      
+  var dom = tddjs.dom;
   var util = tddjs.util;
   var chat = tddjs.namespace("chat");
+
+  if (!dom || !dom.addEventHandler || !util ||
+      !util.observable || !Object.create ||
+      !document.getElementsByTagName ||
+      !Function.prototype.bind) {
+    return;
+  }
 
   function handleSubmit(event) {
     event.preventDefault();
