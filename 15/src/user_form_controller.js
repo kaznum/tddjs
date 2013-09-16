@@ -10,8 +10,10 @@ tddjs.namespace("chat").userFormController = {};
 
     if (this.view) {
       var input = this.view.getElementsByTagName("input")[0];
-      this.model.currentUser = input.value;
-      this.notify("user", input.value);
+      var userName = input.value;
+      this.view.className = "";
+      this.model.currentUser = userName;
+      this.notify("user", userName);
     }
   }
 

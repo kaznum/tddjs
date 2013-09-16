@@ -82,6 +82,14 @@
 
       assert(observer.called);
       assertEquals("Bullrog", observer.args[0]);
+    },
+
+    "test should remove class when successful": function () {
+      this.input.value = "Sharuhachi";
+
+      this.controller.handleSubmit(this.event);
+
+      assertEquals("", this.element.className);
     }
   });
 }());
