@@ -2,6 +2,12 @@
   var userController = tddjs.chat.userFormController;
   var dom = tddjs.namespace("dom");
 
+  function userFormControllerSetUp() {
+    this.controller = Object.create(userController);
+    this.element = {};
+    dom.addEventHandler = stubFn();
+  }
+
   TestCase("UserFormControllerTest", {
     "test should be object": function () {
       assertObject(userController);
@@ -13,11 +19,7 @@
   });
 
   TestCase("UserFormControllerSetViewTest", {
-    setUp: function () {
-      this.controller = Object.create(userController);
-      this.element = {};
-      dom.addEventHandler = stubFn();
-    },
+    setUp: userFormControllerSetUp,
 
     "test should add js-chat class": function () {
       this.controller.setView(this.element);
@@ -45,11 +47,12 @@
   });
 
   TestCase("UserFormControllerHandleSubmitTest", {
+    setUp: userFormControllerSetUp,
+
     "test should prevent event default action": function () {
-      var controller = Object.create(userController);
       var event = { preventDefault: stubFn() };
 
-      controller.handleSubmit(event);
+      this.controller.handleSubmit(event);
       assert(event.preventDefault.called);
     }
   });
