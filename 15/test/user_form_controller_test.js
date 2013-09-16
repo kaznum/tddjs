@@ -54,7 +54,13 @@
   });
 
   TestCase("UserFormControllerHandleSubmitTest", {
-    setUp: userFormControllerSetUp,
+    setUp: function () {
+      userFormControllerSetUp.call(this);
+      this.input = this.element.getElementsByTagName("input")[0];
+      this.model = {};
+      this.controller.setModel(this.model);
+      this.controller.setView(this.element);
+    },
 
     "test should prevent event default action": function () {
       this.controller.handleSubmit(this.event);
@@ -62,22 +68,13 @@
     },
 
     "test should set model.currentUser": function () {
-      var model = {};
-      var input = this.element.getElementsByTagName("input")[0];
-
-      input.value = "cjno";
-      this.controller.setModel(model);
-      this.controller.setView(this.element);
-
+      this.input.value = "cjno";
       this.controller.handleSubmit(this.event);
-      assertEquals("cjno", model.currentUser);
+      assertEquals("cjno", this.model.currentUser);
     },
 
     "test should notify observers of username": function () {
-      var input = this.element.getElementsByTagName("input")[0];
-      input.value = "Bullrog";
-      this.controller.setModel({});
-      this.controller.setView(this.element);
+      this.input.value = "Bullrog";
       var observer = stubFn();
 
       this.controller.observe("user", observer);
