@@ -49,7 +49,7 @@ exports.streamFile = function (filepath, headerFields, stat, res, req, emitter) 
     
     //If we sent a 304, skip sending a body
     if (statCode == 304) {
-      res.close();
+      res.end();
       emitter.emit("success", statCode);
     }
     else {
@@ -62,7 +62,7 @@ exports.streamFile = function (filepath, headerFields, stat, res, req, emitter) 
           emitter.emit("success", statCode);
         })
         .addListener("close",function() {
-          res.close();
+          res.end();
         })
         .addListener("error", function (e) {
           emitter.emit("error", 500, e);

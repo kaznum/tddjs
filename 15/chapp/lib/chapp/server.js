@@ -16,7 +16,7 @@ module.exports = http.createServer(function (req, res) {
     delivery.otherwise(function () {
       res.writeHead(404, { "Content-Type": "text/html" });
       res.write("<h1>Nothing to see here, move along</h1>");
-      res.close();
+      res.end();
     });
   }
 });
