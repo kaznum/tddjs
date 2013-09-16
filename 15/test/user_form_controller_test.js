@@ -90,6 +90,16 @@
       this.controller.handleSubmit(this.event);
 
       assertEquals("", this.element.className);
+    },
+
+    "test should not notify observers of empty username": function () {
+      var observer = stubFn();
+
+      this.controller.observe("user", observer);
+
+      this.controller.handleSubmit(this.event);
+
+      assertFalse(observer.called);
     }
   });
 }());

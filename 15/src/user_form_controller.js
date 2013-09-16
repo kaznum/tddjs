@@ -11,6 +11,11 @@ tddjs.namespace("chat").userFormController = {};
     if (this.view) {
       var input = this.view.getElementsByTagName("input")[0];
       var userName = input.value;
+
+      if (!userName) {
+        return;
+      }
+      
       this.view.className = "";
       this.model.currentUser = userName;
       this.notify("user", userName);
