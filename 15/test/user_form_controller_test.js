@@ -44,6 +44,15 @@
     }
   });
 
+  TestCase("UserFormControllerHandleSubmitTest", {
+    "test should prevent event default action": function () {
+      var controller = Object.create(userController);
+      var event = { preventDefault: stubFn() };
+
+      controller.handleSubmit(event);
+      assert(event.preventDefault.called);
+    }
+  });
 }());
 
 

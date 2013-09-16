@@ -4,6 +4,7 @@ tddjs.namespace("chat").userFormController = {};
   var dom = tddjs.namespace("dom");
 
   function handleSubmit(event) {
+    event.preventDefault();
   }
 
   function setView (element) {
