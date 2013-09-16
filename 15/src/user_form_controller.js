@@ -2,6 +2,8 @@ tddjs.namespace("chat").userFormController = {};
 
 (function () {
   var dom = tddjs.namespace("dom");
+  var util = tddjs.util;
+  var chat = tddjs.namespace("chat");
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -9,6 +11,7 @@ tddjs.namespace("chat").userFormController = {};
     if (this.view) {
       var input = this.view.getElementsByTagName("input")[0];
       this.model.currentUser = input.value;
+      this.notify("user", input.value);
     }
   }
 
@@ -23,9 +26,8 @@ tddjs.namespace("chat").userFormController = {};
     this.model = model;
   }
 
-  tddjs.namespace("chat").userFormController = {
-    setView: setView,
-    setModel: setModel,
-    handleSubmit: handleSubmit
-  };
+  chat.userFormController = tddjs.extend({}, util.observable);
+  chat.userFormController.setView = setView;
+  chat.userFormController.setModel = setModel;
+  chat.userFormController.handleSubmit = handleSubmit;
 }());

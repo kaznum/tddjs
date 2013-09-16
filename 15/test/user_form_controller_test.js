@@ -71,6 +71,20 @@
 
       this.controller.handleSubmit(this.event);
       assertEquals("cjno", model.currentUser);
+    },
+
+    "test should notify observers of username": function () {
+      var input = this.element.getElementsByTagName("input")[0];
+      input.value = "Bullrog";
+      this.controller.setModel({});
+      this.controller.setView(this.element);
+      var observer = stubFn();
+
+      this.controller.observe("user", observer);
+      this.controller.handleSubmit(this.event);
+
+      assert(observer.called);
+      assertEquals("Bullrog", observer.args[0]);
     }
   });
 }());
