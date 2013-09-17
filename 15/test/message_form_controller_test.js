@@ -28,11 +28,12 @@
       this.model = { notify: stubFn() };
       this.controller.setModel(this.model);
       this.controller.setView(this.element);
+      this.event = { preventDefault: stubFn() };
     },
 
     "test should publish message": function () {
       this.controller.setModel(this.model);
-      this.controller.handleSubmit();
+      this.controller.handleSubmit(this.event);
 
       assert(this.model.notify.called);
       assertEquals("message", this.model.notify.args[0]);
@@ -41,7 +42,7 @@
 
     "test should publish message from current user": function () {
       this.model.currentUser = "cjno";
-      this.controller.handleSubmit();
+      this.controller.handleSubmit(this.event);
       assertEquals("cjno", this.model.notify.args[1].user);
     },
 
@@ -49,10 +50,18 @@
       var el = this.element.getElementsByTagName("input")[0];
       el.value = "What are you doing?";
 
-      this.controller.handleSubmit();
+      this.controller.handleSubmit(this.event);
 
       var actual = this.model.notify.args[1].message;
       assertEquals("What are you doing?", actual);
-    }
+    },
+
+    "test should prevent event default action": function () {
+      var el = this.element.getElementsByTagName("input")[0];
+      el.value = "What are you doing?";
+
+      this.controller.handleSubmit(this.event);
+      assert(this.event.preventDefault.called);
+    },
   });
 }());

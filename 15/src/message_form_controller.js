@@ -1,6 +1,7 @@
 (function () {
   var chat = tddjs.namespace("chat");
   function handleSubmit(event) {
+    event.preventDefault();
     var input = this.view.getElementsByTagName("input")[0];
 
     this.model.notify("message", {
