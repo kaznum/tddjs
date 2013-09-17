@@ -4,14 +4,12 @@
     return;
   }
 
-  var dom = tddjs.dom;
   var util = tddjs.util;
   var chat = tddjs.namespace("chat");
 
-  if (!dom || !dom.addEventHandler || !util ||
+  if (!util ||
       !util.observable || !Object.create ||
-      !document.getElementsByTagName ||
-      !Function.prototype.bind) {
+      !document.getElementsByTagName) {
     return;
   }
 
