@@ -51,12 +51,13 @@
   });
 
   TestCase("MessageListControllerAddMessageTest", {
-    setUp: messageListControllerSetUp,
-
-    "test should add dt element with @user": function () {
+    setUp: function () {
+      messageListControllerSetUp.call(this);
       this.controller.setModel(this.model);
       this.controller.setView(this.element);
+    },
 
+    "test should add dt element with @user": function () {
       this.controller.addMessage({
         user: "Eric",
         message: "We are trapper keeper"
@@ -65,6 +66,17 @@
       var dts = this.element.getElementsByTagName("dt");
       assertEquals(1, dts.length);
       assertEquals("@Eric", dts[0].innerHTML);
+    },
+
+    "test should add dd element with message": function () {
+      this.controller.addMessage({
+        user: "Theodore",
+        message: "We are one"
+      });
+
+      var dds = this.element.getElementsByTagName("dd");
+      assertEquals(1, dds.length);
+      assertEquals("We are one", dds[0].innerHTML);
     }
   });
 }());

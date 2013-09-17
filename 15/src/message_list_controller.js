@@ -8,6 +8,10 @@
     var user = document.createElement("dt");
     user.innerHTML = "@" + message.user;
     this.view.appendChild(user);
+
+    var msg = document.createElement("dd");
+    msg.innerHTML = message.message;
+    this.view.appendChild(msg);
   }
 
   function setView(element) {
