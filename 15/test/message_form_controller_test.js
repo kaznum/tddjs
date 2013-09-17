@@ -9,6 +9,10 @@
 
     "test should inherit setView from formController": function () {
       assertSame(messageController.setView, formController.setView);
+    },
+
+    "test should have handleSubmit method": function () {
+      assertFunction(messageController.handleSubmit);
     }
   });
 }());
