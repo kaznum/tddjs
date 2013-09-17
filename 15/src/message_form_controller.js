@@ -1,5 +1,16 @@
 (function () {
+  if (typeof tddjs == "undefined" ||
+      typeof document == "undefined") {
+    return;
+  }
+
   var chat = tddjs.namespace("chat");
+
+  if (!chat.formController ||
+      !document.getElementsByTagName) {
+    return;
+  }
+
   function handleSubmit(event) {
     event.preventDefault();
     var input = this.view.getElementsByTagName("input")[0];
