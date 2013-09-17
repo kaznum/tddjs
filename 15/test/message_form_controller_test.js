@@ -75,6 +75,15 @@
       this.controller.handleSubmit(this.event);
 
       assertFalse(this.model.notify.called);
+    },
+
+    "test should clear form after publish": function () {
+      var el = this.element.getElementsByTagName("input")[0];
+      el.value = "NP: A vision of misery";
+
+      this.controller.handleSubmit(this.event);
+
+      assertEquals("", el.value);
     }
   });
 }());
