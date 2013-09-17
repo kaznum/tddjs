@@ -1,21 +1,32 @@
 (function () {
   if (typeof tddjs == "undefined" ||
-      typeof document == "undefined" ||
-      !document.getElementById || !Object.create ||
-      !tddjs.namespace("chat").userFormController) {
+      typeof document == "undefined") {
+      return;
+  }
+
+  var c = tddjs.namespace("chat");
+
+  if (!document.getElementById || !tddjs ||
+      !c.userFormController || !c.messageListController) {
     alert("Browser is not supported");
     return;
   }
 
-  var chat = tddjs.chat;
-  var model = {};
+  var model = Object.create(tddjs.ajax.cometClient);
+  model.url = "/comet";
+
   var userForm = document.getElementById("userForm");
-  var userController = Object.create(chat.userFormController);
+  var userController = Object.create(c.userFormController);
   userController.setModel(model);
   userController.setView(userForm);
 
   userController.observe("user", function (user) {
-    alert("Welcome, " + user);
+    var messages = document.getElementById("messages");
+    var messagesController = Object.create(c.messageListController);
+    messagesController.setModel(model);
+    messagesController.setView(messages);
+
+    model.connect();
   });
 }());
 
