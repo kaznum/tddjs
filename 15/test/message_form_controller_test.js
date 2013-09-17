@@ -18,28 +18,41 @@
 
   TestCase("FormControllerHandleSubmitTest", {
     setUp: function () {
+      /*:DOC element = <form>
+          <fieldset>
+            <input type="text" name="message" id="message">
+            <input type="submit" value="Send">
+          </fieldset>
+        </form> */
       this.controller = Object.create(messageController);
       this.model = { notify: stubFn() };
       this.controller.setModel(this.model);
+      this.controller.setView(this.element);
     },
 
     "test should publish message": function () {
-      var controller = Object.create(messageController);
-      var model = { notify: stubFn() };
+      this.controller.setModel(this.model);
+      this.controller.handleSubmit();
 
-      controller.setModel(model);
-      controller.handleSubmit();
-
-      assert(model.notify.called);
-      assertEquals("message", model.notify.args[0]);
-      assertObject(model.notify.args[1]);
+      assert(this.model.notify.called);
+      assertEquals("message", this.model.notify.args[0]);
+      assertObject(this.model.notify.args[1]);
     },
 
     "test should publish message from current user": function () {
       this.model.currentUser = "cjno";
       this.controller.handleSubmit();
       assertEquals("cjno", this.model.notify.args[1].user);
-    }
+    },
 
+    "test should publish message from form": function () {
+      var el = this.element.getElementsByTagName("input")[0];
+      el.value = "What are you doing?";
+
+      this.controller.handleSubmit();
+
+      var actual = this.model.notify.args[1].message;
+      assertEquals("What are you doing?", actual);
+    }
   });
 }());
