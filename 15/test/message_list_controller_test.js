@@ -1,6 +1,12 @@
 (function () {
   var listController = tddjs.chat.messageListController;
 
+  function messageListControllerSetUp() {
+    /*:DOC element = <dl></dl> */
+      this.controller = Object.create(listController);
+      this.model = { observe: stubFn() };
+  }
+
   TestCase("MessageListControllerTest", {
     "test should be object": function () {
       assertObject(listController);
@@ -12,10 +18,7 @@
   });
 
   TestCase("MessageListControllerSetModelTest", {
-    setUp: function () {
-      this.controller = Object.create(listController);
-      this.model = { observe: stubFn() };
-    },
+    setUp: messageListControllerSetUp,
 
     "test should observe model's message channel": function () {
       var controller = Object.create(listController);
@@ -34,6 +37,16 @@
       this.model.observe.args[1]();
       assert(stub.called);
       assertSame(this.controller, stub.thisValue);
+    },
+  });
+
+  TestCase("MessageListControllerSetViewTest", {
+    setUp: messageListControllerSetUp,
+
+    "test should set class to js-chat": function () {
+      this.controller.setView(this.element);
+
+      assertClassName("js-chat", this.element);
     }
   });
 }());

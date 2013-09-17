@@ -6,8 +6,13 @@
 
   function addMessage(message) {}
 
+  function setView(element) {
+    element.className = "js-chat";
+  }
+
   chat.messageListController = {
     setModel: setModel,
+    setView: setView,
     addMessage: addMessage
   };
 }());
