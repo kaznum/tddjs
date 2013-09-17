@@ -26,6 +26,11 @@
     messagesController.setModel(model);
     messagesController.setView(messages);
 
+    var mForm = document.getElementById("messageForm");
+    var messageFormController = Object.create(c.messageFormController);
+    messageFormController.setModel(model);
+    messageFormController.setView(mForm);
+
     model.connect();
   });
 }());
