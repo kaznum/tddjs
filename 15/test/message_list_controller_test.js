@@ -77,6 +77,17 @@
       var dds = this.element.getElementsByTagName("dd");
       assertEquals(1, dds.length);
       assertEquals("We are one", dds[0].innerHTML);
+    },
+
+    "test should escape HTML in messages": function () {
+      this.controller.addMessage({
+        user: "Dr. Evil",
+        message: "<script>window.alert('p4wned!');</script>"
+      });
+
+      var expected = "&lt;script&gt;window.alert('p4wned!');" + "&lt;/script&gt;";
+      var dd = this.element.getElementsByTagName("dd")[0];
+      assertEquals(expected, dd.innerHTML);
     }
   });
 }());

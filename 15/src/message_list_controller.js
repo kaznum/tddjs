@@ -10,7 +10,7 @@
     this.view.appendChild(user);
 
     var msg = document.createElement("dd");
-    msg.innerHTML = message.message;
+    msg.innerHTML = message.message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     this.view.appendChild(msg);
   }
 
