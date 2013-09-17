@@ -17,6 +17,12 @@
   });
 
   TestCase("FormControllerHandleSubmitTest", {
+    setUp: function () {
+      this.controller = Object.create(messageController);
+      this.model = { notify: stubFn() };
+      this.controller.setModel(this.model);
+    },
+
     "test should publish message": function () {
       var controller = Object.create(messageController);
       var model = { notify: stubFn() };
@@ -27,6 +33,13 @@
       assert(model.notify.called);
       assertEquals("message", model.notify.args[0]);
       assertObject(model.notify.args[1]);
+    },
+
+    "test should publish message from current user": function () {
+      this.model.currentUser = "cjno";
+      this.controller.handleSubmit();
+      assertEquals("cjno", this.model.notify.args[1].user);
     }
+
   });
 }());
