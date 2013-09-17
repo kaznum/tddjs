@@ -3,7 +3,7 @@
       typeof document == "undefined") {
     return;
   }
-      
+
   var dom = tddjs.dom;
   var util = tddjs.util;
   var chat = tddjs.namespace("chat");
@@ -25,26 +25,19 @@
       if (!userName) {
         return;
       }
-      
+
       this.view.className = "";
       this.model.currentUser = userName;
       this.notify("user", userName);
     }
   }
 
-  function setView (element) {
-    element.className = "js-chat";
-    var handler = this.handleSubmit.bind(this);
-    dom.addEventHandler(element, "submit", handler);
-    this.view = element;
-  }
-
   function setModel(model) {
     this.model = model;
   }
 
-  chat.userFormController = tddjs.extend({}, util.observable);
-  chat.userFormController.setView = setView;
+  chat.userFormController = tddjs.extend(Object.create(chat.formController),
+                                         util.observable);
   chat.userFormController.setModel = setModel;
   chat.userFormController.handleSubmit = handleSubmit;
 }());

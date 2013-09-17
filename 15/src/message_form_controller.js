@@ -1,4 +1,4 @@
 (function () {
   var chat = tddjs.namespace("chat");
-  chat.messageFormController = {};
+  chat.messageFormController = Object.create(chat.formController);
 }());
