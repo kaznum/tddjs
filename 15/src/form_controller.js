@@ -17,7 +17,12 @@
     this.view = element;
   }
 
+    function setModel(model) {
+    this.model = model;
+  }
+
   chat.formController = {
-    setView: setView
+    setView: setView,
+    setModel: setModel
   };
 }());

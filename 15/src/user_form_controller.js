@@ -30,12 +30,7 @@
     }
   }
 
-  function setModel(model) {
-    this.model = model;
-  }
-
   chat.userFormController = tddjs.extend(Object.create(chat.formController),
                                          util.observable);
-  chat.userFormController.setModel = setModel;
   chat.userFormController.handleSubmit = handleSubmit;
 }());
