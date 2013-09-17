@@ -1,4 +1,8 @@
 (function () {
   var chat = tddjs.namespace("chat");
-  chat.messageListController = {};
+  function setModel(model) {};
+
+  chat.messageListController = {
+    setModel: setModel
+  };
 }());
