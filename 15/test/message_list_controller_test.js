@@ -88,6 +88,21 @@
       var expected = "&lt;script&gt;window.alert('p4wned!');" + "&lt;/script&gt;";
       var dd = this.element.getElementsByTagName("dd")[0];
       assertEquals(expected, dd.innerHTML);
+    },
+
+    "test should not repeat same user dt's": function () {
+      this.controller.addMessage({
+        user: "Kyle",
+        message: "One-two-three not it!"
+      });
+      this.controller.addMessage({
+        user: "Kyle",
+        message: ":)"
+      });
+      var dts = this.element.getElementsByTagName("dt");
+      var dds = this.element.getElementsByTagName("dd");
+      assertEquals(1, dts.length);
+      assertEquals(2, dds.length);
     }
   });
 }());
