@@ -49,4 +49,22 @@
       assertClassName("js-chat", this.element);
     }
   });
+
+  TestCase("MessageListControllerAddMessageTest", {
+    setUp: messageListControllerSetUp,
+
+    "test should add dt element with @user": function () {
+      this.controller.setModel(this.model);
+      this.controller.setView(this.element);
+
+      this.controller.addMessage({
+        user: "Eric",
+        message: "We are trapper keeper"
+      });
+
+      var dts = this.element.getElementsByTagName("dt");
+      assertEquals(1, dts.length);
+      assertEquals("@Eric", dts[0].innerHTML);
+    }
+  });
 }());

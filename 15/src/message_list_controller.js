@@ -4,10 +4,15 @@
     model.observe("message", this.addMessage.bind(this));
   }
 
-  function addMessage(message) {}
+  function addMessage(message) {
+    var user = document.createElement("dt");
+    user.innerHTML = "@" + message.user;
+    this.view.appendChild(user);
+  }
 
   function setView(element) {
     element.className = "js-chat";
+    this.view = element;
   }
 
   chat.messageListController = {
