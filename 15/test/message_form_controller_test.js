@@ -15,4 +15,18 @@
       assertFunction(messageController.handleSubmit);
     }
   });
+
+  TestCase("FormControllerHandleSubmitTest", {
+    "test should publish message": function () {
+      var controller = Object.create(messageController);
+      var model = { notify: stubFn() };
+
+      controller.setModel(model);
+      controller.handleSubmit();
+
+      assert(model.notify.called);
+      assertEquals("message", model.notify.args[0]);
+      assertObject(model.notify.args[1]);
+    }
+  });
 }());
