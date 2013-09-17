@@ -25,6 +25,8 @@
       user.innerHTML = "@" + message.user;
       this.view.appendChild(user);
       this.prevUser = message.user;
+
+      this.view.scrollTop = this.view.scrollHeight;
     }
 
     var msg = document.createElement("dd");

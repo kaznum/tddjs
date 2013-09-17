@@ -103,6 +103,18 @@
       var dds = this.element.getElementsByTagName("dd");
       assertEquals(1, dts.length);
       assertEquals(2, dds.length);
+    },
+
+    "test should scroll element down": function () {
+      var element = {
+        appendChild: stubFn(),
+        scrollHeight: 1900
+      };
+
+      this.controller.setView(element);
+      this.controller.addMessage({ user:"me", message: "Hey" });
+
+      assertEquals(1900, element.scrollTop);
     }
   });
 }());
