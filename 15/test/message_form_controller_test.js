@@ -32,6 +32,8 @@
     },
 
     "test should publish message": function () {
+      var el = this.element.getElementsByTagName("input")[0];
+      el.value = "What are you doing?";
       this.controller.setModel(this.model);
       this.controller.handleSubmit(this.event);
 
@@ -41,6 +43,8 @@
     },
 
     "test should publish message from current user": function () {
+      var el = this.element.getElementsByTagName("input")[0];
+      el.value = "What are you doing?";
       this.model.currentUser = "cjno";
       this.controller.handleSubmit(this.event);
       assertEquals("cjno", this.model.notify.args[1].user);
@@ -63,5 +67,13 @@
       this.controller.handleSubmit(this.event);
       assert(this.event.preventDefault.called);
     },
+
+    "test should not notify observers of empty message": function () {
+      var el = this.element.getElementsByTagName("input")[0];
+      el.value = "";
+      this.controller.handleSubmit(this.event);
+
+      assertFalse(this.model.notify.called);
+    }
   });
 }());
