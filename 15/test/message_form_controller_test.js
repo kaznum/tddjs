@@ -58,6 +58,7 @@
 
       var actual = this.model.notify.args[1].message;
       assertEquals("What are you doing?", actual);
+      assertEquals("", el.value);
     },
 
     "test should prevent event default action": function () {
